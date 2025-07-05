@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homelab Services - Chris Moore</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #081F2C;
+            background: #fafafa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Color palette matching main site */
+        :root {
+            --primary-teal: #62CBC9;
+            --storm-navy: #081F2C;
+            --heartland-red: #CF3339;
+            --light-teal: #8dd8d6;
+            --dark-teal: #4ba8a6;
+            --cream: #f7f5f2;
+            --light-gray: #e8e8e8;
+            --medium-gray: #7f8c8d;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--storm-navy) 0%, var(--primary-teal) 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(207, 51, 57, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(98, 203, 201, 0.1) 0%, transparent 50%);
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.3em;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        /* Back link */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateX(-5px);
+        }
+
+        /* Service categories */
+        .section {
+            padding: 80px 0;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 50px;
+            color: var(--storm-navy);
+            font-weight: 700;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--heartland-red), var(--primary-teal));
+            border-radius: 2px;
+        }
+
+        /* Service grid */
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .service-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(8, 31, 44, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-teal), var(--heartland-red));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(8, 31, 44, 0.15);
+            border-color: var(--primary-teal);
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .service-card h3 {
+            color: var(--storm-navy);
+            margin-bottom: 10px;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .service-card p {
+            color: var(--medium-gray);
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .service-status {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 12px;
+            height: 12px;
+            background: #27ae60;
+            border-radius: 50%;
+            box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.2);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.2); }
+            50% { box-shadow: 0 0 0 8px rgba(39, 174, 96, 0); }
+            100% { box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.2); }
+        }
+
+        /* Architecture section */
+        .architecture {
+            background: linear-gradient(135deg, var(--cream) 0%, rgba(98, 203, 201, 0.05) 100%);
+            padding: 80px 0;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .tech-badge {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+            color: var(--storm-navy);
+            box-shadow: 0 5px 15px rgba(8, 31, 44, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .tech-badge:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(8, 31, 44, 0.15);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--storm-navy);
+            color: white;
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .footer a {
+            color: var(--primary-teal);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Category colors */
+        .management { border-top-color: #3498db; }
+        .monitoring { border-top-color: #2ecc71; }
+        .applications { border-top-color: #e74c3c; }
+        .infrastructure { border-top-color: #f39c12; }
+
+        /* Quick access links styling */
+        .quick-link {
+            color: white !important;
+            text-decoration: none !important;
+            padding: 10px 15px;
+            border-radius: 10px;
+            display: block;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .quick-link:hover {
+            background: rgba(98, 203, 201, 0.2);
+            border-color: var(--primary-teal);
+            transform: translateX(5px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .section-title {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <section class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="back-link">
+                    <span>←</span>
+                    <span>Back to Portfolio</span>
+                </a>
+                <h1>Homelab Infrastructure</h1>
+                <p class="subtitle">Self-Hosted Services & Automation Platform</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Management Services -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Management & Control</h2>
+            <div class="service-grid">
+                <a href="https://home.chrispaulmoore.com" class="service-card management" target="_blank">
+                    <span class="service-status"></span>
+                    <span class="service-icon">🏠</span>
+                    <h3>Homepage</h3>
+                    <p>Central dashboard for all homelab services with real-time status monitoring and quick access links.</p>
+                </a>
+                <a href="https://docker.chrispaulmoore.com" class="service-card management" target="_blank">
+                    <span class="service-status"></span>
+                    <span class="service-icon">🐳</span>
+                    <h3>Portainer</h3>
+                    <p>Docker container management interface for easy deployment, monitoring, and maintenance of services.</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Monitoring Services -->
+    <section class="section" style="background: white;">
+        <div class="container">
+            <h2 class="section-title">Monitoring & Analytics</h2>
+            <div class="service-grid">
+                <a href="https://metrics.chrispaulmoore.com" class="service-card monitoring" target="_blank">
+                    <span class="service-status"></span>
+                    <span class="service-icon">📊</span>
+                    <h3>Grafana</h3>
+                    <p>Beautiful metric visualization dashboards for system performance, container stats, and custom analytics.</p>
+                </a>
+                <a href="https://prometheus.chrispaulmoore.com" class="service-card monitoring" target="_blank">
+                    <span class="service-status"></span>
+                    <span class="service-icon">🎯</span>
+                    <h3>Prometheus</h3>
+                    <p>Time-series metrics collection and alerting system monitoring all infrastructure components.</p>
+                </a>
+                <a href="https://uptime.chrispaulmoore.com" class="service-card monitoring" target="_blank">
+                    <span class="service-status"></span>
+                    <span class="service-icon">✅</span>
+                    <h3>Uptime Kuma</h3>
+                    <p>Service uptime monitoring with instant notifications and historical availability tracking.</p>
+                </a>
+                <a href="https://monitor.chrispaulmoore.com" class="service-card monitoring" target="_blank">
+                    <span class="service-status"></span>
+                    <span class="service-icon">📈</span>
+                    <h3>Netdata</h3>
+                    <p>Real-time system performance monitoring with detailed metrics for CPU, memory, network, and disk usage.</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Applications -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Applications & Services</h2>
+            <div class="service-grid">
+                <a href="https://vault.chrispaulmoore.com" class="service-card applications" target="_blank">
+                    <span class="service-status"></span>
+                    <span class="service-icon">🔐</span>
+                    <h3>Vaultwarden</h3>
+                    <p>Self-hosted password manager compatible with Bitwarden clients for secure credential storage.</p>
+                </a>
+                <a href="https://cloud.chrispaulmoore.com" class="service-card applications" target="_blank">
+                    <span class="service-status"></span>
+                    <span class="service-icon">☁️</span>
+                    <h3>Nextcloud</h3>
+                    <p>Private cloud storage solution with file sync, sharing, and collaboration features.</p>
+                </a>
+                <a href="https://media.chrispaulmoore.com" class="service-card applications" target="_blank">
+                    <span class="service-status"></span>
+                    <span class="service-icon">🎬</span>
+                    <h3>Jellyfin</h3>
+                    <p>Media server for streaming personal video, music, and photo collections across devices.</p>
+                </a>
+                <a href="https://pdf.chrispaulmoore.com" class="service-card applications" target="_blank">
+                    <span class="service-status"></span>
+                    <span class="service-icon">📄</span>
+                    <h3>Stirling PDF</h3>
+                    <p>Comprehensive PDF manipulation toolkit with merge, split, convert, and editing capabilities.</p>
+                </a>
+                <a href="https://docs.chrispaulmoore.com" class="service-card applications" target="_blank">
+                    <span class="service-status"></span>
+                    <span class="service-icon">📋</span>
+                    <h3>Paperless-ngx</h3>
+                    <p>Document management system with OCR, tagging, and automated organization features.</p>
+                </a>
+                <a href="https://obsidian.chrispaulmoore.com" class="service-card applications" target="_blank">
+                    <span class="service-status"></span>
+                    <span class="service-icon">📝</span>
+                    <h3>Obsidian Wiki</h3>
+                    <p>Interactive documentation editor with graph view, live preview, and cross-linking capabilities.</p>
+                </a>
+                <a href="https://auth.chrispaulmoore.com" class="service-card infrastructure" target="_blank">
+                    <span class="service-status"></span>
+                    <span class="service-icon">🔐</span>
+                    <h3>Authentik</h3>
+                    <p>Single Sign-On and identity provider for secure authentication across all services.</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Architecture -->
+    <section class="architecture">
+        <div class="container">
+            <h2 class="section-title">Technical Architecture</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto 40px; font-size: 1.1em; color: var(--medium-gray);">
+                Built on Ubuntu Server with Docker containerization, secured through Cloudflare Tunnel for zero-trust access without port forwarding.
+            </p>
+            <div class="tech-stack">
+                <div class="tech-badge">🐧 Ubuntu Server</div>
+                <div class="tech-badge">🐳 Docker & Docker Compose</div>
+                <div class="tech-badge">🛡️ Cloudflare Tunnel</div>
+                <div class="tech-badge">🔒 HTTPS Everywhere</div>
+                <div class="tech-badge">📊 Prometheus Stack</div>
+                <div class="tech-badge">🗄️ MariaDB</div>
+                <div class="tech-badge">📝 Loki & Promtail</div>
+                <div class="tech-badge">🏠 Home Assistant</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Infrastructure Services -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Infrastructure Components</h2>
+            <div class="service-grid">
+                <div class="service-card infrastructure">
+                    <span class="service-icon">🗄️</span>
+                    <h3>MariaDB</h3>
+                    <p>Database backend for Nextcloud and other services requiring persistent data storage.</p>
+                </div>
+                <div class="service-card infrastructure">
+                    <span class="service-icon">📋</span>
+                    <h3>Loki</h3>
+                    <p>Log aggregation system collecting and indexing logs from all containers and services.</p>
+                </div>
+                <div class="service-card infrastructure">
+                    <span class="service-icon">🔍</span>
+                    <h3>Node Exporter</h3>
+                    <p>System metrics exporter providing detailed hardware and OS metrics to Prometheus.</p>
+                </div>
+                <div class="service-card infrastructure">
+                    <span class="service-icon">📦</span>
+                    <h3>cAdvisor</h3>
+                    <p>Container metrics analyzer providing resource usage and performance data.</p>
+                </div>
+                <div class="service-card infrastructure">
+                    <span class="service-icon">🚨</span>
+                    <h3>Alertmanager</h3>
+                    <p>Alert routing and management for Prometheus-based monitoring alerts.</p>
+                </div>
+                <div class="service-card infrastructure">
+                    <span class="service-icon">🏠</span>
+                    <h3>Home Assistant</h3>
+                    <p>Home automation platform for smart device control and automation workflows.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Access Dashboard -->
+    <section class="section" style="background: linear-gradient(135deg, var(--storm-navy) 0%, rgba(8, 31, 44, 0.95) 100%); color: white;">
+        <div class="container">
+            <h2 class="section-title" style="color: white;">Quick Access Dashboard</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto 40px; font-size: 1.1em; opacity: 0.9;">
+                All services are accessible via HTTPS through Cloudflare Tunnel. Click any service below for direct access.
+            </p>
+            <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 20px; backdrop-filter: blur(10px);">
+                <h3 style="color: var(--primary-teal); margin-bottom: 20px;">🔗 Direct Service Links</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+                    <a href="https://chrispaulmoore.com" class="quick-link" target="_blank">📄 chrispaulmoore.com - Portfolio</a>
+                    <a href="https://www.chrispaulmoore.com" class="quick-link" target="_blank">📄 www.chrispaulmoore.com - Portfolio (www)</a>
+                    <a href="https://home.chrispaulmoore.com" class="quick-link" target="_blank">🏠 home.chrispaulmoore.com - Homepage</a>
+                    <a href="https://docker.chrispaulmoore.com" class="quick-link" target="_blank">🐳 docker.chrispaulmoore.com - Portainer</a>
+                    <a href="https://metrics.chrispaulmoore.com" class="quick-link" target="_blank">📊 metrics.chrispaulmoore.com - Grafana</a>
+                    <a href="https://uptime.chrispaulmoore.com" class="quick-link" target="_blank">✅ uptime.chrispaulmoore.com - Uptime Kuma</a>
+                    <a href="https://monitor.chrispaulmoore.com" class="quick-link" target="_blank">📈 monitor.chrispaulmoore.com - Netdata</a>
+                    <a href="https://prometheus.chrispaulmoore.com" class="quick-link" target="_blank">🎯 prometheus.chrispaulmoore.com - Prometheus</a>
+                    <a href="https://vault.chrispaulmoore.com" class="quick-link" target="_blank">🔐 vault.chrispaulmoore.com - Vaultwarden</a>
+                    <a href="https://cloud.chrispaulmoore.com" class="quick-link" target="_blank">☁️ cloud.chrispaulmoore.com - Nextcloud</a>
+                    <a href="https://media.chrispaulmoore.com" class="quick-link" target="_blank">🎬 media.chrispaulmoore.com - Jellyfin</a>
+                    <a href="https://pdf.chrispaulmoore.com" class="quick-link" target="_blank">📄 pdf.chrispaulmoore.com - Stirling PDF</a>
+                    <a href="https://docs.chrispaulmoore.com" class="quick-link" target="_blank">📋 docs.chrispaulmoore.com - Paperless-ngx</a>
+                    <a href="https://obsidian.chrispaulmoore.com" class="quick-link" target="_blank">📝 obsidian.chrispaulmoore.com - Obsidian Wiki</a>
+                    <a href="https://auth.chrispaulmoore.com" class="quick-link" target="_blank">🔐 auth.chrispaulmoore.com - Authentik</a>
+                </div>
+            </div>
+            <div style="margin-top: 30px; text-align: center;">
+                <p style="opacity: 0.8;">🚀 All services running on Ubuntu Server with Docker • 🔒 Secured via Cloudflare Tunnel • ⚡ 23 containers active</p>
+            </div>
+            <div style="margin-top: 30px; text-align: center;">
+                <a href="https://obsidian.chrispaulmoore.com" style="display: inline-block; padding: 15px 40px; background: linear-gradient(45deg, var(--primary-teal), var(--heartland-red)); color: white; text-decoration: none; border-radius: 30px; font-weight: bold; font-size: 1.1em; transition: all 0.3s ease; box-shadow: 0 5px 20px rgba(0,0,0,0.3);" target="_blank">
+                    📝 Open Interactive Wiki Editor
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2025 Chris Moore | <a href="/">Back to Portfolio</a> | <a href="mailto:chris@chrispaulmoore.com">Contact</a></p>
+            <p style="margin-top: 10px; opacity: 0.8; font-size: 0.9em;">
+                Powered by open-source technologies and Kansas City determination
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add hover effects
+        const cards = document.querySelectorAll('.service-card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>

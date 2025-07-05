@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chris Moore - Implementation Consultant Advisor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #081F2C;
+            background: #fafafa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Updated color palette */
+        :root {
+            --primary-teal: #62CBC9;
+            --storm-navy: #081F2C;
+            --heartland-red: #CF3339;
+            --light-teal: #8dd8d6;
+            --dark-teal: #4ba8a6;
+            --cream: #f7f5f2;
+            --light-gray: #e8e8e8;
+            --medium-gray: #7f8c8d;
+        }
+
+        /* Civic engagement inspired geometric patterns */
+        .geometric-bg {
+            background-image: 
+                linear-gradient(30deg, transparent 50%, rgba(98, 203, 201, 0.05) 50%),
+                linear-gradient(-30deg, transparent 50%, rgba(8, 31, 44, 0.03) 50%);
+            background-size: 60px 60px;
+        }
+
+        .hexagon-pattern {
+            background-image: radial-gradient(circle at 50% 50%, var(--primary-teal) 2px, transparent 2px);
+            background-size: 30px 30px;
+            opacity: 0.1;
+        }
+
+        /* Header with D&D/RPG inspired design */
+        .header {
+            background: linear-gradient(135deg, var(--storm-navy) 0%, var(--primary-teal) 100%);
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(207, 51, 57, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(98, 203, 201, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(207, 51, 57, 0.05) 0%, transparent 50%);
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .header h1 {
+            font-size: 4em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.6em;
+            font-weight: 400;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .header .description {
+            font-size: 1.2em;
+            max-width: 900px;
+            margin: 0 auto;
+            opacity: 0.8;
+            line-height: 1.8;
+        }
+
+        /* Civic engagement inspired navigation */
+        .nav {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 0;
+            box-shadow: 0 4px 20px rgba(8, 31, 44, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: var(--storm-navy);
+            font-weight: 600;
+            padding: 16px 32px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+            display: inline-block;
+            background: transparent;
+            border: 2px solid transparent;
+        }
+
+        .nav a:hover {
+            background: var(--primary-teal);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(98, 203, 201, 0.4);
+            border-color: var(--primary-teal);
+        }
+
+        /* Sections with gaming/music inspired styling */
+        .section {
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 3em;
+            text-align: center;
+            margin-bottom: 70px;
+            color: var(--storm-navy);
+            font-weight: 700;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--heartland-red), var(--primary-teal));
+            border-radius: 2px;
+        }
+
+        /* Cards with D&D character sheet inspiration */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(8, 31, 44, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary-teal), var(--heartland-red), var(--primary-teal));
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(8, 31, 44, 0.15);
+            border-color: var(--primary-teal);
+        }
+
+        .card h3 {
+            color: var(--storm-navy);
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            font-weight: 600;
+        }
+
+        .card-icon {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        /* Project cards with campaign/adventure styling */
+        .project-card {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(8, 31, 44, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border-left: 6px solid var(--heartland-red);
+        }
+
+        .project-card::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: var(--primary-teal);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(8, 31, 44, 0.15);
+        }
+
+        .project-card h3 {
+            color: var(--storm-navy);
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        .project-meta {
+            color: var(--medium-gray);
+            font-size: 0.9em;
+            margin-bottom: 25px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .project-highlights {
+            background: linear-gradient(135deg, var(--cream) 0%, rgba(98, 203, 201, 0.05) 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 25px;
+            border-left: 4px solid var(--primary-teal);
+        }
+
+        .project-highlights h4 {
+            color: var(--storm-navy);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        /* Metrics with Kansas City sports inspiration */
+        .metrics {
+            background: linear-gradient(135deg, var(--storm-navy) 0%, var(--dark-teal) 100%);
+            padding: 80px 0;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .metrics::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(207, 51, 57, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(98, 203, 201, 0.1) 0%, transparent 50%);
+        }
+
+        .metrics-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 50px;
+            margin-top: 50px;
+        }
+
+        .metric {
+            padding: 30px 20px;
+            position: relative;
+        }
+
+        .metric-number {
+            font-size: 3.5em;
+            font-weight: 900;
+            color: var(--primary-teal);
+            display: block;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .metric-label {
+            font-size: 1.1em;
+            margin-top: 15px;
+            opacity: 0.9;
+        }
+
+        /* Timeline with quest progression styling */
+        .timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, var(--primary-teal), var(--heartland-red), var(--primary-teal));
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            background: white;
+            padding: 40px;
+            margin: 40px 0;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(8, 31, 44, 0.1);
+            position: relative;
+            width: calc(50% - 30px);
+        }
+
+        .timeline-item:nth-child(odd) {
+            margin-left: auto;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 20px;
+            height: 20px;
+            background: var(--primary-teal);
+            border-radius: 50%;
+            transform: translateY(-50%);
+        }
+
+        .timeline-item:nth-child(odd)::before {
+            left: -40px;
+        }
+
+        .timeline-item:nth-child(even)::before {
+            right: -40px;
+        }
+
+        .timeline-item h3 {
+            color: var(--storm-navy);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .timeline-date {
+            color: var(--medium-gray);
+            font-size: 0.9em;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        /* Personal section with local culture inspiration */
+        .personal {
+            background: linear-gradient(135deg, var(--cream) 0%, rgba(98, 203, 201, 0.05) 100%);
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .personal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2362CBC9' fill-opacity='0.03'%3E%3Cpath d='M20 20c0 5.5-4.5 10-10 10s-10-4.5-10-10 4.5-10 10-10 10 4.5 10 10zm10 0c0 5.5-4.5 10-10 10s-10-4.5-10-10 4.5-10 10-10 10 4.5 10 10z'/%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .personal-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 80px;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .personal-image {
+            text-align: center;
+        }
+
+        .personal-image img {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto;
+            display: block;
+            box-shadow: 0 20px 40px rgba(98, 203, 201, 0.3);
+            border: 5px solid var(--primary-teal);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .personal-image img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 25px 50px rgba(98, 203, 201, 0.4);
+        }
+
+        /* Fallback for missing image */
+        .personal-image .placeholder {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, var(--primary-teal), var(--dark-teal));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            font-size: 4em;
+            color: white;
+            box-shadow: 0 20px 40px rgba(98, 203, 201, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .personal-image .placeholder::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2) 0%, transparent 50%);
+        }
+
+        .personal-info h3 {
+            color: var(--storm-navy);
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            font-weight: 600;
+        }
+
+        .personal-info p {
+            margin-bottom: 25px;
+            line-height: 1.8;
+            font-size: 1.1em;
+        }
+
+        /* Interest tags with gaming dice inspiration */
+        .interests {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .interest-tag {
+            background: linear-gradient(135deg, var(--primary-teal), var(--dark-teal));
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(98, 203, 201, 0.3);
+        }
+
+        .interest-tag:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(98, 203, 201, 0.4);
+        }
+
+        .civic-tag {
+            background: linear-gradient(135deg, var(--heartland-red), #e74c3c);
+        }
+
+        /* Contact section */
+        .contact {
+            background: var(--storm-navy);
+            color: white;
+            text-align: center;
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .contact::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(98, 203, 201, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(207, 51, 57, 0.1) 0%, transparent 50%);
+        }
+
+        .contact-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-top: 50px;
+            flex-wrap: wrap;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.1em;
+        }
+
+        .contact-item a:hover {
+            color: var(--light-teal) !important;
+            text-decoration: underline !important;
+        }
+
+        /* Media links styling */
+        .personal-info a {
+            transition: all 0.3s ease;
+        }
+
+        .personal-info a:hover {
+            color: var(--dark-teal) !important;
+            text-decoration: underline !important;
+        }
+
+        /* Membership cards */
+        .membership-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(8, 31, 44, 0.1);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .membership-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(8, 31, 44, 0.15);
+            border-color: var(--primary-teal);
+        }
+
+        .membership-card h3 {
+            color: var(--storm-navy);
+            margin: 20px 30px 15px;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .membership-card p {
+            color: var(--medium-gray);
+            margin: 0 30px 30px;
+            line-height: 1.6;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--primary-teal);
+            color: white;
+            padding: 20px 40px;
+            text-decoration: none;
+            border-radius: 50px;
+            margin-top: 40px;
+            transition: background 0.3s ease, transform 0.3s ease;
+            font-weight: 600;
+            font-size: 1.1em;
+            box-shadow: 0 4px 15px rgba(98, 203, 201, 0.3);
+            border: 2px solid var(--primary-teal);
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: var(--dark-teal);
+            border-color: var(--dark-teal);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(98, 203, 201, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--heartland-red);
+            box-shadow: 0 4px 15px rgba(207, 51, 57, 0.3);
+            border-color: var(--heartland-red);
+        }
+
+        .btn-secondary:hover {
+            background: #a82b2f;
+            border-color: #a82b2f;
+            box-shadow: 0 6px 20px rgba(207, 51, 57, 0.4);
+        }
+
+        /* Alternative photo frame styles - uncomment to use */
+        
+        /* Square frame with rounded corners */
+        .personal-image.square img {
+            border-radius: 20px;
+            width: 320px;
+            height: 320px;
+        }
+        
+        /* Hexagon frame */
+        .personal-image.hexagon img {
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+        }
+        
+        /* Photo with gradient overlay */
+        .personal-image.gradient {
+            position: relative;
+        }
+        
+        .personal-image.gradient::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, transparent 0%, transparent 40%, rgba(98, 203, 201, 0.2) 100%);
+            pointer-events: none;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5em;
+            }
+            
+            .nav {
+                padding: 10px 0;
+                position: relative; /* Remove sticky on mobile */
+            }
+            
+            .nav ul {
+                gap: 10px;
+                padding: 0 10px;
+            }
+            
+            .nav a {
+                padding: 10px 20px;
+                font-size: 0.9em;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                gap: 25px;
+            }
+
+            .personal-content {
+                grid-template-columns: 1fr;
+                gap: 50px;
+            }
+
+            .personal-image img,
+            .personal-image .placeholder {
+                width: 200px;
+                height: 200px;
+                font-size: 3em;
+            }
+
+            .timeline::before {
+                left: 30px;
+            }
+
+            .timeline-item {
+                width: calc(100% - 80px);
+                margin-left: 80px;
+            }
+
+            .timeline-item::before {
+                left: -40px;
+            }
+
+            .section-title {
+                font-size: 2.2em;
+            }
+        }
+
+        /* Add some jazz-inspired animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <section class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1>Chris Moore</h1>
+                <p class="subtitle">Implementation Consultant Advisor • Process Innovator • Tech Enthusiast</p>
+                <p class="description">
+                    Bridging technology and community impact through business process automation, homelab engineering, 
+                    and thoughtful system design. Passionate about making Kansas City stronger through both 
+                    professional excellence and continuous learning.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="container">
+            <ul>
+                <li><a href="#expertise">Expertise</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#impact">Impact</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#personal">About</a></li>
+                <li><a href="#memberships">Community</a></li>
+                <li><a href="#contact">Connect</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Expertise Section -->
+    <section id="expertise" class="section geometric-bg">
+        <div class="container">
+            <h2 class="section-title">Core Expertise</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-icon">🔄</div>
+                    <h3>Business Process Automation</h3>
+                    <p>Specializing in SS&C Blue Prism Chorus (BPM, RPA, Document Automation) to transform complex business workflows into streamlined, automated solutions.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">⚙️</div>
+                    <h3>Technical Integration</h3>
+                    <p>Java development, Docker containerization, Linux administration, and SQL database management for comprehensive enterprise solutions.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🏛️</div>
+                    <h3>Civic Technology</h3>
+                    <p>Applying process optimization expertise to community organizing, education advocacy, and civic engagement initiatives in Kansas City.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🎯</div>
+                    <h3>Strategic Implementation</h3>
+                    <p>Leading modernization of Blue Prism Chorus administrator screens, security frameworks, and user management systems with AI integration.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🔧</div>
+                    <h3>Systems Architecture</h3>
+                    <p>Designing and maintaining sophisticated homelab environments, self-hosted tools, and automation systems for both professional and personal use.</p>
+                    <a href="/homelab.html" style="display: inline-block; margin-top: 15px; color: var(--primary-teal); text-decoration: none; font-weight: 600;">View Homelab Services →</a>
+                </div>
+                <div class="card">
+                    <div class="card-icon">📊</div>
+                    <h3>Data & Analytics</h3>
+                    <p>Advanced QGIS skills, spatial analysis, database migration projects, and integration with emerging AI tools for enhanced business intelligence.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Portfolio -->
+    <section id="projects" class="section" style="background: white;">
+        <div class="container">
+            <h2 class="section-title">Project Portfolio</h2>
+            <div class="card-grid">
+                <div class="project-card">
+                    <h3>Blue Prism Chorus Modernization</h3>
+                    <div class="project-meta">Enterprise Platform Development • 2023-2024</div>
+                    <p>Leading comprehensive modernization of administrator interfaces, focusing on process definitions, security frameworks, and AI-powered automation agent orchestration.</p>
+                    <div class="project-highlights">
+                        <h4>Technical Achievements:</h4>
+                        <ul>
+                            <li>BPMN process documentation integration</li>
+                            <li>Drools business rules engine optimization</li>
+                            <li>Advanced user management system design</li>
+                            <li>AI-driven automation workflows</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <h3>Financial Services Digital Transformation</h3>
+                    <div class="project-meta">Multi-Platform Integration • 2022-2023</div>
+                    <p>Architected comprehensive BPM solutions for financial services clients, integrating legacy systems with modern automation platforms using Java and Docker technologies.</p>
+                    <div class="project-highlights">
+                        <h4>Key Outcomes:</h4>
+                        <ul>
+                            <li>40% reduction in manual processing time</li>
+                            <li>Seamless SEC compliance automation</li>
+                            <li>Cross-platform system integration</li>
+                            <li>Enhanced data accuracy and reporting</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <h3>Kansas City Education Advocacy</h3>
+                    <div class="project-meta">Civic Leadership • 2024-Present</div>
+                    <p>Strategic leadership in "Parents for KC Kids" and school bond campaigns, applying process optimization expertise to education advocacy and community organizing.</p>
+                    <div class="project-highlights">
+                        <h4>Community Impact:</h4>
+                        <ul>
+                            <li>Successful school bond election leadership</li>
+                            <li>Rally and campaign organization</li>
+                            <li>Parent education and engagement programs</li>
+                            <li>Systematic approach to civic change</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <h3>Enterprise Database Migration</h3>
+                    <div class="project-meta">Systems Integration • 2021-2022</div>
+                    <p>Led complex database migration projects combining SQL expertise with spatial analysis tools, ensuring seamless data transition and enhanced system performance.</p>
+                    <div class="project-highlights">
+                        <h4>Technical Excellence:</h4>
+                        <ul>
+                            <li>Zero-downtime migration strategy</li>
+                            <li>Advanced QGIS spatial data integration</li>
+                            <li>Performance optimization protocols</li>
+                            <li>Comprehensive documentation and training</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Metrics -->
+    <section id="impact" class="metrics">
+        <div class="container">
+            <div class="metrics-content">
+                <h2 class="section-title" style="color: white;">Measurable Impact</h2>
+                <div class="metrics-grid">
+                    <div class="metric floating">
+                        <span class="metric-number">40%</span>
+                        <div class="metric-label">Process Efficiency Gain</div>
+                    </div>
+                    <div class="metric floating" style="animation-delay: -2s;">
+                        <span class="metric-number">25%</span>
+                        <div class="metric-label">Faster Implementation</div>
+                    </div>
+                    <div class="metric floating" style="animation-delay: -4s;">
+                        <span class="metric-number">10+</span>
+                        <div class="metric-label">Years Technical Excellence</div>
+                    </div>
+                    <div class="metric floating" style="animation-delay: -1s;">
+                        <span class="metric-number">50+</span>
+                        <div class="metric-label">Enterprise Solutions</div>
+                    </div>
+                    <div class="metric floating" style="animation-delay: -3s;">
+                        <span class="metric-number">3</span>
+                        <div class="metric-label">Major Civic Campaigns</div>
+                    </div>
+                    <div class="metric floating" style="animation-delay: -5s;">
+                        <span class="metric-number">100%</span>
+                        <div class="metric-label">Kansas City Commitment</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Timeline -->
+    <section id="experience" class="section">
+        <div class="container">
+            <h2 class="section-title">Professional Journey</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h3>Implementation Consultant Advisor</h3>
+                    <div class="timeline-date">January 2022 - Present | SS&C Technologies</div>
+                    <p>Leading Blue Prism Chorus modernization initiatives, focusing on AI integration and process optimization for financial services clients.</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <h3>Senior Implementation Consultant</h3>
+                    <div class="timeline-date">November 2016 - February 2022 | SS&C Technologies</div>
+                    <p>Developed enterprise BPM frameworks and led cross-functional teams in complex system integrations and process improvements.</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <h3>Implementation Consultant</h3>
+                    <div class="timeline-date">March 2015 - November 2016 | SS&C Technologies</div>
+                    <p>Specialized in custom automation solutions for financial services, establishing foundation for advanced technical expertise.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Personal Section -->
+    <section id="personal" class="personal">
+        <div class="container">
+            <h2 class="section-title">Beyond The Code</h2>
+            <div class="personal-content">
+                <div class="personal-image">
+                    <img src="family-photo.jpg" alt="Chris Moore with family" onerror="this.style.display='none'; document.getElementById('photo-placeholder').style.display='flex';">
+                    <div id="photo-placeholder" class="placeholder" style="display: none;">👨‍👩‍👦</div>
+                    <p style="margin-top: 30px; color: var(--medium-gray); font-size: 1.1em; font-weight: 500;">Kansas City, Missouri</p>
+                </div>
+                <div class="personal-info">
+                    <h3>Kansas City Culture & Community</h3>
+                    <p>Life centers around family, community impact, and Kansas City's rich cultural landscape. With my wife Gina (a healthcare IT systems analyst) and our 6-year-old son Walter, we're passionate supporters of Kansas City sports—season ticket holders for KC Current, loyal Chiefs and Royals fans who understand that great teams require both individual excellence and collaborative strategy.</p>
+                    
+                    <h3>Civic Engagement & Community Involvement</h3>
+                    <p>Deeply engaged in Kansas City's civic and cultural landscape through active memberships and participation. From education advocacy with "Parents for KC Kids" to supporting local arts and wildlife conservation, I believe in the power of engaged citizens to strengthen their communities. Every membership represents a commitment to making Kansas City an even better place for all families.</p>
+                    
+                    <h3>Creative Problem-Solving</h3>
+                    <p>From D&D campaigns (Curse of Strahd veteran) to home automation projects, I approach challenges with systematic thinking and creative solutions. Whether modernizing enterprise software or designing Japanese-inspired gardens for Kansas City climate, the methodology remains consistent: research, plan, iterate, improve.</p>
+                    
+                    <h3>Current Media Rotation</h3>
+                    <div style="background: rgba(98, 203, 201, 0.05); padding: 25px; border-radius: 15px; margin-top: 20px; border-left: 4px solid var(--primary-teal);">
+                        <p style="margin-bottom: 20px;"><strong>🎮 Gaming:</strong> <a href="https://na.runefactory.com/azuma/" target="_blank" style="color: var(--primary-teal); text-decoration: none;">Rune Factory: Guardians of Azuma</a> <span style="color: var(--medium-gray); font-size: 0.9em;">(70% complete)</span><br>
+                        <em style="color: var(--medium-gray); font-size: 0.95em;">Fantasy farming adventure meets monster-taming action RPG</em></p>
+                        
+                        <p style="margin-bottom: 20px;"><strong>📚 Reading:</strong> <a href="https://www.octaviabutler.com/parableseries" target="_blank" style="color: var(--primary-teal); text-decoration: none;">Parable of the Sower</a> by Octavia E. Butler <span style="color: var(--medium-gray); font-size: 0.9em;">(90% complete)</span><br>
+                        <em style="color: var(--medium-gray); font-size: 0.95em;">Dystopian masterpiece exploring resilience and community in crisis</em></p>
+                        
+                        <p style="margin-bottom: 20px;"><strong>🎵 Listening:</strong> <a href="https://numerogroup.com/products/penny-the-quarters-friends" target="_blank" style="color: var(--primary-teal); text-decoration: none;">Penny & The Quarters & Friends</a><br>
+                        <em style="color: var(--medium-gray); font-size: 0.95em;">Soul-stirring vintage R&B rediscovered from the Columbus, Ohio vault</em></p>
+                        
+                        <p style="margin-bottom: 0;"><strong>📺 Watching:</strong> <a href="https://tv.apple.com/us/show/murderbot/umc.cmc.5owrzntj9v1gpg31wshflud03" target="_blank" style="color: var(--primary-teal); text-decoration: none;">The Murderbot Diaries</a> <span style="color: var(--medium-gray); font-size: 0.9em;">(20% complete)</span><br>
+                        <em style="color: var(--medium-gray); font-size: 0.95em;">Sarcastic SecUnit discovers humanity while protecting humans from themselves</em></p>
+                    </div>
+
+                    <div class="interests">
+                        <span class="interest-tag civic-tag">🎓 Education Advocate</span>
+                        <span class="interest-tag">👨‍👩‍👦 Family Adventures</span>
+                        <span class="interest-tag">⚽ KC Current Season Tickets</span>
+                        <span class="interest-tag">🏈 Chiefs Kingdom</span>
+                        <span class="interest-tag">⚾ Royals Faithful</span>
+                        <span class="interest-tag">🎭 KC Arts Community</span>
+                        <span class="interest-tag">🎲 D&D Campaign Veteran</span>
+                        <span class="interest-tag">🎵 KCUR & The Bridge</span>
+                        <span class="interest-tag">🏠 DIY & Home Automation</span>
+                        <span class="interest-tag">🖥️ Homelab Enthusiast</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Memberships -->
+    <section id="memberships" class="section" style="background: white;">
+        <div class="container">
+            <h2 class="section-title">Community Memberships & Involvement</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto 50px; font-size: 1.15em; color: var(--medium-gray);">
+                Active participant in Kansas City's civic and cultural institutions, contributing to education, arts, and community development.
+            </p>
+            <div class="card-grid">
+                <a href="https://kansascityzoo.org/" target="_blank" class="membership-card" style="text-decoration: none; color: inherit;">
+                    <div style="height: 200px; background: url('https://kansascityzoo.org/wp-content/uploads/2023/03/kc-zoo-logo.svg') center/contain no-repeat, linear-gradient(135deg, #2E7D32, #4CAF50); border-radius: 15px 15px 0 0;"></div>
+                    <h3>Kansas City Zoo & Aquarium</h3>
+                    <p>Supporting wildlife conservation and education for future generations through family membership.</p>
+                </a>
+                
+                <a href="https://www.rabbitholekc.org/" target="_blank" class="membership-card" style="text-decoration: none; color: inherit;">
+                    <div style="height: 200px; background: linear-gradient(135deg, #9C27B0, #E91E63); border-radius: 15px 15px 0 0; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 3em; color: white;">🐰</span>
+                    </div>
+                    <h3>The Rabbit Hole</h3>
+                    <p>Kansas City's premier children's museum, fostering creativity and learning through interactive exhibits.</p>
+                </a>
+                
+                <a href="https://nelson-atkins.org/" target="_blank" class="membership-card" style="text-decoration: none; color: inherit;">
+                    <div style="height: 200px; background: url('https://nelson-atkins.org/wp-content/themes/nelsons/images/nelson-atkins-logo.svg') center/contain no-repeat, linear-gradient(135deg, #1976D2, #2196F3); border-radius: 15px 15px 0 0;"></div>
+                    <h3>Nelson-Atkins Museum of Art</h3>
+                    <p>Supporting world-class art accessibility and cultural enrichment for the Kansas City community.</p>
+                </a>
+                
+                <a href="https://holliday.kcpublicschools.org/families/parent-organizations" target="_blank" class="membership-card" style="text-decoration: none; color: inherit;">
+                    <div style="height: 200px; background: linear-gradient(135deg, var(--heartland-red), #F44336); border-radius: 15px 15px 0 0; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 3em; color: white;">🎓</span>
+                    </div>
+                    <h3>Holliday Montessori PTA</h3>
+                    <p>Active PTA member supporting innovative Montessori education and strengthening our school community.</p>
+                </a>
+            </div>
+            
+            <div style="margin-top: 60px; padding: 30px; background: linear-gradient(135deg, rgba(98, 203, 201, 0.05), rgba(207, 51, 57, 0.05)); border-radius: 20px; border-left: 5px solid var(--primary-teal);">
+                <h3 style="color: var(--storm-navy); margin-bottom: 15px;">🎭 Next Cultural Experience</h3>
+                <a href="https://kcshakes.org/" target="_blank" style="text-decoration: none;">
+                    <div style="display: flex; align-items: center; gap: 30px;">
+                        <div style="flex-shrink: 0;">
+                            <div style="width: 120px; height: 120px; background: linear-gradient(135deg, #6A1B9A, #8E24AA); border-radius: 15px; display: flex; align-items: center; justify-content: center;">
+                                <span style="font-size: 3em;">🎭</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--storm-navy); margin-bottom: 10px;">Love's Labour's Lost - Heart of America Shakespeare Festival</h4>
+                            <p style="color: var(--medium-gray); margin: 0;">
+                                Looking forward to experiencing Shakespeare in Southmoreland Park, continuing Kansas City's tradition of free, professional theater for all. A perfect blend of culture, community, and family entertainment under the stars.
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education -->
+    <section class="section" style="background: var(--cream);">
+        <div class="container">
+            <h2 class="section-title">Education & Foundation</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-icon">🎓</div>
+                    <h3>MBA in General Management & Finance</h3>
+                    <p>University of Missouri-Kansas City</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🔬</div>
+                    <h3>M.S. in Mathematics</h3>
+                    <p>University of Missouri-Kansas City</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">📊</div>
+                    <h3>B.Sc. in Mathematics</h3>
+                    <p>University of Missouri-Columbia</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="contact-content">
+                <h2 class="section-title" style="color: white;">Let's Build Something Together</h2>
+                <p style="font-size: 1.3em; margin-bottom: 30px; opacity: 0.9;">
+                    Ready to optimize processes, explore automation strategies, or discuss civic tech solutions?
+                </p>
+                <p style="font-size: 0.9em; opacity: 0.7; font-style: italic;">
+                    💬 Comments section coming soon - looking forward to engaging with the community!
+                </p>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <span>📧</span>
+                        <a href="mailto:chris@chrispaulmoore.com" style="color: var(--primary-teal); text-decoration: none; transition: color 0.3s ease;">chris@chrispaulmoore.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <span>📍</span>
+                        <span>Kansas City, Missouri</span>
+                    </div>
+                </div>
+                <a href="https://www.linkedin.com/in/chrispaulmoore" class="btn" style="margin-top: 50px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px; vertical-align: middle;">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                    Connect on LinkedIn
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Enhanced smooth scrolling with easing
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Enhanced navigation scroll effect
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('.nav');
+            if (window.scrollY > 100) {
+                nav.style.background = 'rgba(255, 255, 255, 0.95)';
+                nav.style.backdropFilter = 'blur(10px)';
+            } else {
+                nav.style.background = 'rgba(255, 255, 255, 0.95)';
+                nav.style.backdropFilter = 'blur(10px)';
+            }
+        });
+
+        // Add intersection observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards for scroll animations
+        document.querySelectorAll('.card, .project-card, .timeline-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

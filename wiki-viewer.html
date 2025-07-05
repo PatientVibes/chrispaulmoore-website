@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homelab Wiki - Documentation Viewer</title>
+    
+    <!-- Markdown-it for rendering markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it@13.0.1/dist/markdown-it.min.js"></script>
+    
+    <!-- Mermaid for diagrams -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    
+    <!-- Prism for syntax highlighting -->
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-docker.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e3a5f 0%, #0d1929 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 300px;
+            background: rgba(0, 0, 0, 0.3);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-y: auto;
+            padding: 2rem 1rem;
+        }
+
+        .sidebar h2 {
+            color: #60a5fa;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .nav-section {
+            margin-bottom: 2rem;
+        }
+
+        .nav-section h3 {
+            color: #94a3b8;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: #e0e0e0;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            margin-bottom: 0.25rem;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            background: rgba(96, 165, 250, 0.2);
+            color: #60a5fa;
+        }
+
+        .nav-link.active {
+            background: rgba(96, 165, 250, 0.3);
+            color: #60a5fa;
+            border-left: 3px solid #60a5fa;
+        }
+
+        /* Main Content */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem 3rem;
+        }
+
+        .content-inner {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Loading spinner */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #60a5fa;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Markdown Styling */
+        .markdown-body {
+            color: #e0e0e0;
+        }
+
+        .markdown-body h1 {
+            color: #60a5fa;
+            border-bottom: 2px solid rgba(96, 165, 250, 0.3);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .markdown-body h2 {
+            color: #60a5fa;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .markdown-body h3 {
+            color: #94a3b8;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .markdown-body pre {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .markdown-body code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        .markdown-body pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .markdown-body blockquote {
+            border-left: 4px solid #60a5fa;
+            padding-left: 1rem;
+            margin: 1rem 0;
+            color: #94a3b8;
+        }
+
+        .markdown-body table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1rem 0;
+        }
+
+        .markdown-body th, .markdown-body td {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        .markdown-body th {
+            background: rgba(96, 165, 250, 0.1);
+            color: #60a5fa;
+        }
+
+        .markdown-body a {
+            color: #60a5fa;
+            text-decoration: none;
+        }
+
+        .markdown-body a:hover {
+            text-decoration: underline;
+        }
+
+        .markdown-body ul, .markdown-body ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .markdown-body li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Mermaid diagram container */
+        .mermaid {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        /* Error message */
+        .error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            .content {
+                padding: 1rem;
+            }
+        }
+
+        /* Back to main wiki button */
+        .back-button {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(96, 165, 250, 0.2);
+            border: 1px solid #60a5fa;
+            color: #60a5fa;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .back-button:hover {
+            background: rgba(96, 165, 250, 0.3);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <a href="/wiki.html" class="back-button">← Back to Wiki Home</a>
+    
+    <div class="container">
+        <nav class="sidebar">
+            <h2>📚 Documentation</h2>
+            
+            <div class="nav-section">
+                <h3>Getting Started</h3>
+                <a class="nav-link" data-doc="setup/homelab_setup.md">Initial Setup</a>
+                <a class="nav-link" data-doc="setup/laptop_optimization_guide.md">Laptop Optimization</a>
+            </div>
+            
+            <div class="nav-section">
+                <h3>Services</h3>
+                <a class="nav-link" data-doc="services/portainer.md">Portainer</a>
+                <a class="nav-link" data-doc="services/grafana.md">Grafana</a>
+                <a class="nav-link" data-doc="services/prometheus.md">Prometheus</a>
+                <a class="nav-link" data-doc="services/homepage.md">Homepage</a>
+            </div>
+            
+            <div class="nav-section">
+                <h3>Architecture</h3>
+                <a class="nav-link" data-doc="architecture/overview.md">System Overview</a>
+                <a class="nav-link" data-doc="architecture/diagrams.md">Architecture Diagrams</a>
+            </div>
+            
+            <div class="nav-section">
+                <h3>Operations</h3>
+                <a class="nav-link" data-doc="operations/daily.md">Daily Operations</a>
+                <a class="nav-link" data-doc="operations/maintenance.md">Maintenance</a>
+            </div>
+            
+            <div class="nav-section">
+                <h3>Troubleshooting</h3>
+                <a class="nav-link" data-doc="troubleshooting/common-issues.md">Common Issues</a>
+            </div>
+            
+            <div class="nav-section">
+                <h3>Guides</h3>
+                <a class="nav-link" data-doc="guides/prometheus_guide.md">Prometheus Queries</a>
+                <a class="nav-link" data-doc="guides/uptime_kuma_monitors.md">Uptime Monitoring</a>
+                <a class="nav-link" data-doc="guides/mermaid-diagrams.md">Using Mermaid</a>
+            </div>
+        </nav>
+        
+        <main class="content">
+            <div class="content-inner">
+                <div id="markdown-content" class="markdown-body">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Initialize mermaid
+        mermaid.initialize({ 
+            startOnLoad: false,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#1e3a5f',
+                primaryTextColor: '#e0e0e0',
+                primaryBorderColor: '#60a5fa',
+                lineColor: '#60a5fa',
+                secondaryColor: '#0d1929',
+                tertiaryColor: '#1e3a5f',
+                background: '#0d1929',
+                mainBkg: '#1e3a5f',
+                secondBkg: '#0d1929',
+                tertiaryBkg: '#162347'
+            }
+        });
+
+        // Initialize markdown-it
+        const md = window.markdownit({
+            html: true,
+            linkify: true,
+            typographer: true,
+            highlight: function (str, lang) {
+                if (lang && Prism.languages[lang]) {
+                    try {
+                        return '<pre class="language-' + lang + '"><code>' +
+                               Prism.highlight(str, Prism.languages[lang], lang) +
+                               '</code></pre>';
+                    } catch (__) {}
+                }
+                return '<pre><code>' + md.utils.escapeHtml(str) + '</code></pre>';
+            }
+        });
+
+        // Base path for documentation files
+        const DOC_BASE_PATH = '/wiki-docs/';
+
+        // Load and render markdown file
+        async function loadDocument(docPath) {
+            const contentDiv = document.getElementById('markdown-content');
+            
+            // Show loading spinner
+            contentDiv.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+            
+            try {
+                // For now, show a message about the documentation
+                // In production, you would fetch the actual markdown files
+                const response = await fetchMarkdownContent(docPath);
+                
+                if (!response.ok) {
+                    throw new Error('Document not found');
+                }
+                
+                const markdown = await response.text();
+                
+                // Render markdown
+                let html = md.render(markdown);
+                
+                // Handle mermaid diagrams
+                html = html.replace(/```mermaid([\s\S]*?)```/g, (match, diagram) => {
+                    const id = 'mermaid-' + Math.random().toString(36).substr(2, 9);
+                    return `<div class="mermaid" id="${id}">${diagram.trim()}</div>`;
+                });
+                
+                contentDiv.innerHTML = html;
+                
+                // Render mermaid diagrams
+                mermaid.run();
+                
+                // Update active nav link
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.toggle('active', link.dataset.doc === docPath);
+                });
+                
+                // Scroll to top
+                contentDiv.scrollTop = 0;
+                
+            } catch (error) {
+                contentDiv.innerHTML = `
+                    <div class="error">
+                        <h2>Documentation Not Found</h2>
+                        <p>The requested documentation file could not be loaded.</p>
+                        <p>Path: ${docPath}</p>
+                        <p>This wiki viewer needs the markdown files to be served from your web server.</p>
+                        <br>
+                        <p><strong>For now, you can:</strong></p>
+                        <ul>
+                            <li>View the documentation directly on the server at <code>/home/ubuntu/homelab/docs/</code></li>
+                            <li>Use VS Code or another markdown viewer to read the files</li>
+                            <li>Set up a markdown file server to serve the docs directory</li>
+                        </ul>
+                    </div>
+                `;
+            }
+        }
+
+        // Simulate fetching markdown content
+        // In production, this would actually fetch from the server
+        async function fetchMarkdownContent(docPath) {
+            // For demonstration, return a sample content
+            if (docPath === 'setup/homelab_setup.md') {
+                return {
+                    ok: true,
+                    text: async () => `# Homelab Setup Guide
+
+Welcome to the homelab setup documentation!
+
+## Overview
+This guide will walk you through setting up your homelab infrastructure.
+
+## Prerequisites
+- Ubuntu Server 24.04 LTS
+- Docker and Docker Compose
+- 32GB RAM recommended
+- 100GB+ storage
+
+## Quick Start
+
+\`\`\`bash
+# Clone the repository
+git clone https://github.com/yourusername/homelab.git
+
+# Run setup script
+./scripts/setup_homelab_structure.sh
+\`\`\`
+
+## Architecture Diagram
+
+\`\`\`mermaid
+graph TD
+    A[Internet] --> B[Cloudflare]
+    B --> C[Tunnel]
+    C --> D[Docker Services]
+    D --> E[Your Apps]
+\`\`\`
+
+For full documentation, see the server files at \`/home/ubuntu/homelab/docs/\`
+`
+                };
+            }
+            
+            // For other paths, return not found
+            return { ok: false };
+        }
+
+        // Handle navigation clicks
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const docPath = link.dataset.doc;
+                loadDocument(docPath);
+                
+                // Update URL hash
+                window.location.hash = docPath;
+            });
+        });
+
+        // Load initial document based on hash or default
+        const initialDoc = window.location.hash.slice(1) || 'setup/homelab_setup.md';
+        loadDocument(initialDoc);
+
+        // Handle back/forward navigation
+        window.addEventListener('hashchange', () => {
+            const docPath = window.location.hash.slice(1);
+            if (docPath) {
+                loadDocument(docPath);
+            }
+        });
+    </script>
+</body>
+</html>

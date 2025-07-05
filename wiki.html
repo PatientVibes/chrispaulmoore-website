@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homelab Wiki - chrispaulmoore.com</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#1e3a5f',
+                primaryTextColor: '#e0e0e0',
+                primaryBorderColor: '#60a5fa',
+                lineColor: '#60a5fa',
+                secondaryColor: '#0d1929',
+                tertiaryColor: '#1e3a5f',
+                background: '#0d1929',
+                mainBkg: '#1e3a5f',
+                secondBkg: '#0d1929',
+                tertiaryBkg: '#162347',
+                primaryFontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+            }
+        });
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e3a5f 0%, #0d1929 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-size: 3rem;
+            background: linear-gradient(45deg, #60a5fa, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #94a3b8;
+        }
+
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #60a5fa;
+        }
+
+        .wiki-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .wiki-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .wiki-card:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .wiki-card h2 {
+            color: #60a5fa;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .wiki-card ul {
+            list-style: none;
+        }
+
+        .wiki-card li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .wiki-card li:last-child {
+            border-bottom: none;
+        }
+
+        .wiki-card a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .wiki-card a:hover {
+            color: #60a5fa;
+        }
+
+        .quick-links {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .quick-links h2 {
+            color: #60a5fa;
+            margin-bottom: 1rem;
+        }
+
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .link-button {
+            background: rgba(96, 165, 250, 0.2);
+            border: 1px solid #60a5fa;
+            border-radius: 5px;
+            padding: 1rem;
+            text-align: center;
+            text-decoration: none;
+            color: #60a5fa;
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .link-button:hover {
+            background: rgba(96, 165, 250, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .search-box {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .search-box input {
+            width: 100%;
+            max-width: 500px;
+            padding: 1rem;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #60a5fa;
+        }
+
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #64748b;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .wiki-sections {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏠 Homelab Wiki</h1>
+            <p class="subtitle">Complete documentation for chrispaulmoore.com infrastructure</p>
+        </header>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search documentation..." onkeyup="searchDocs()">
+        </div>
+
+        <div class="quick-stats">
+            <div class="stat-card">
+                <div class="stat-number">22</div>
+                <div>Active Services</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">13</div>
+                <div>Domains</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">32GB</div>
+                <div>RAM</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">24/7</div>
+                <div>Uptime</div>
+            </div>
+        </div>
+
+        <div class="quick-links">
+            <h2>🚀 Quick Access</h2>
+            <div class="link-grid">
+                <a href="https://home.chrispaulmoore.com" class="link-button">Dashboard</a>
+                <a href="https://docker.chrispaulmoore.com" class="link-button">Portainer</a>
+                <a href="https://metrics.chrispaulmoore.com" class="link-button">Grafana</a>
+                <a href="https://uptime.chrispaulmoore.com" class="link-button">Uptime Kuma</a>
+                <a href="/homelab/docs/WIKI.md" class="link-button">Full Wiki</a>
+                <a href="/homelab/docs/troubleshooting/common-issues.md" class="link-button">Troubleshooting</a>
+            </div>
+        </div>
+
+        <div class="wiki-sections">
+            <div class="wiki-card">
+                <h2>📚 Getting Started</h2>
+                <ul>
+                    <li><a href="/homelab/docs/setup/homelab_setup.md">→ Initial Setup Guide</a></li>
+                    <li><a href="/homelab/docs/setup/laptop_optimization_guide.md">→ Server Optimization</a></li>
+                    <li><a href="/homelab/docs/WIKI.md">→ Wiki Index</a></li>
+                    <li><a href="/CLAUDE.md">→ Project Overview</a></li>
+                </ul>
+            </div>
+
+            <div class="wiki-card">
+                <h2>🔧 Services</h2>
+                <ul>
+                    <li><a href="/homelab/docs/services/homepage.md">→ Homepage Dashboard</a></li>
+                    <li><a href="/homelab/docs/services/portainer.md">→ Portainer</a></li>
+                    <li><a href="/homelab/docs/services/grafana.md">→ Grafana</a></li>
+                    <li><a href="/homelab/docs/services/README.md">→ All Services</a></li>
+                </ul>
+            </div>
+
+            <div class="wiki-card">
+                <h2>🏗️ Architecture</h2>
+                <ul>
+                    <li><a href="/homelab/docs/architecture/overview.md">→ System Overview</a></li>
+                    <li><a href="/homelab/docs/architecture/network.md">→ Network Design</a></li>
+                    <li><a href="/homelab/docs/architecture/security.md">→ Security Model</a></li>
+                    <li><a href="/homelab/docs/architecture/backups.md">→ Backup Strategy</a></li>
+                </ul>
+            </div>
+
+            <div class="wiki-card">
+                <h2>🛠️ Operations</h2>
+                <ul>
+                    <li><a href="/homelab/docs/operations/daily.md">→ Daily Tasks</a></li>
+                    <li><a href="/homelab/docs/operations/maintenance.md">→ Maintenance</a></li>
+                    <li><a href="/homelab/docs/operations/backup-recovery.md">→ Backups</a></li>
+                    <li><a href="/homelab/docs/operations/disaster-recovery.md">→ Disaster Recovery</a></li>
+                </ul>
+            </div>
+
+            <div class="wiki-card">
+                <h2>🔍 Troubleshooting</h2>
+                <ul>
+                    <li><a href="/homelab/docs/troubleshooting/common-issues.md">→ Common Issues</a></li>
+                    <li><a href="/homelab/docs/troubleshooting/services.md">→ Service Issues</a></li>
+                    <li><a href="/homelab/docs/troubleshooting/performance.md">→ Performance</a></li>
+                    <li><a href="/homelab/docs/troubleshooting/logs.md">→ Log Analysis</a></li>
+                </ul>
+            </div>
+
+            <div class="wiki-card">
+                <h2>📖 Guides</h2>
+                <ul>
+                    <li><a href="/homelab/docs/guides/prometheus_guide.md">→ Prometheus Queries</a></li>
+                    <li><a href="/homelab/docs/guides/uptime_kuma_monitors.md">→ Monitoring Setup</a></li>
+                    <li><a href="/homelab/docs/guides/adding-services.md">→ Add New Services</a></li>
+                    <li><a href="/homelab/docs/guides/README.md">→ All Guides</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <footer>
+            <p>Homelab Wiki - Last Updated: June 22, 2025</p>
+            <p>View source on <a href="/homelab/" style="color: #60a5fa;">GitHub</a></p>
+        </footer>
+    </div>
+
+    <script>
+        function searchDocs() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const cards = document.getElementsByClassName('wiki-card');
+            
+            for (let card of cards) {
+                const links = card.getElementsByTagName('a');
+                let hasMatch = false;
+                
+                for (let link of links) {
+                    if (link.textContent.toLowerCase().includes(filter)) {
+                        hasMatch = true;
+                        link.style.display = '';
+                    } else {
+                        link.style.display = 'none';
+                    }
+                }
+                
+                // Show/hide the entire card based on matches
+                card.style.display = hasMatch || filter === '' ? '' : 'none';
+            }
+        }
+    </script>
+</body>
+</html>
