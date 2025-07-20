@@ -948,17 +948,36 @@
                     
                     <h3>Current Media Rotation</h3>
                     <div style="background: rgba(98, 203, 201, 0.05); padding: 25px; border-radius: 15px; margin-top: 20px; border-left: 4px solid var(--primary-teal);">
-                        <p style="margin-bottom: 20px;"><strong>🎮 Gaming:</strong> <a href="https://na.runefactory.com/azuma/" target="_blank" style="color: var(--primary-teal); text-decoration: none;">Rune Factory: Guardians of Azuma</a> <span style="color: var(--medium-gray); font-size: 0.9em;">(70% complete)</span><br>
-                        <em style="color: var(--medium-gray); font-size: 0.95em;">Fantasy farming adventure meets monster-taming action RPG</em></p>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <h4 style="margin: 0; color: var(--storm-navy);">Current Media Rotation</h4>
+                            <button onclick="refreshMediaRotation()" style="background: var(--primary-teal); color: white; border: none; padding: 8px 15px; border-radius: 20px; font-size: 0.8em; cursor: pointer; transition: background 0.3s ease;" onmouseover="this.style.background='var(--dark-teal)'" onmouseout="this.style.background='var(--primary-teal)'">🔄 Refresh</button>
+                        </div>
                         
-                        <p style="margin-bottom: 20px;"><strong>📚 Reading:</strong> <a href="https://www.octaviabutler.com/parableseries" target="_blank" style="color: var(--primary-teal); text-decoration: none;">Parable of the Sower</a> by Octavia E. Butler <span style="color: var(--medium-gray); font-size: 0.9em;">(90% complete)</span><br>
-                        <em style="color: var(--medium-gray); font-size: 0.95em;">Dystopian masterpiece exploring resilience and community in crisis</em></p>
+                        <p style="margin-bottom: 20px;" data-media="gaming">
+                            <strong>🎮 Gaming:</strong> <a href="https://na.runefactory.com/azuma/" target="_blank" style="color: var(--primary-teal); text-decoration: none;">Rune Factory: Guardians of Azuma</a> <span style="color: var(--medium-gray); font-size: 0.9em;">(70% complete)</span><br>
+                            <em style="color: var(--medium-gray); font-size: 0.95em;">Fantasy farming adventure meets monster-taming action RPG</em>
+                        </p>
                         
-                        <p style="margin-bottom: 20px;"><strong>🎵 Listening:</strong> <a href="https://numerogroup.com/products/penny-the-quarters-friends" target="_blank" style="color: var(--primary-teal); text-decoration: none;">Penny & The Quarters & Friends</a><br>
-                        <em style="color: var(--medium-gray); font-size: 0.95em;">Soul-stirring vintage R&B rediscovered from the Columbus, Ohio vault</em></p>
+                        <p style="margin-bottom: 20px;" data-media="reading">
+                            <strong>📚 Reading:</strong> <a href="https://www.octaviabutler.com/parableseries" target="_blank" style="color: var(--primary-teal); text-decoration: none;">Parable of the Sower</a> by Octavia E. Butler <span style="color: var(--medium-gray); font-size: 0.9em;">(90% complete)</span><br>
+                            <em style="color: var(--medium-gray); font-size: 0.95em;">Dystopian masterpiece exploring resilience and community in crisis</em>
+                        </p>
                         
-                        <p style="margin-bottom: 0;"><strong>📺 Watching:</strong> <a href="https://tv.apple.com/us/show/murderbot/umc.cmc.5owrzntj9v1gpg31wshflud03" target="_blank" style="color: var(--primary-teal); text-decoration: none;">The Murderbot Diaries</a> <span style="color: var(--medium-gray); font-size: 0.9em;">(20% complete)</span><br>
-                        <em style="color: var(--medium-gray); font-size: 0.95em;">Sarcastic SecUnit discovers humanity while protecting humans from themselves</em></p>
+                        <p style="margin-bottom: 20px;" data-media="music">
+                            <strong>🎵 Listening:</strong> <a href="https://numerogroup.com/products/penny-the-quarters-friends" target="_blank" style="color: var(--primary-teal); text-decoration: none;">Penny & The Quarters & Friends</a><br>
+                            <em style="color: var(--medium-gray); font-size: 0.95em;">Soul-stirring vintage R&B rediscovered from the Columbus, Ohio vault</em>
+                        </p>
+                        
+                        <p style="margin-bottom: 10px;" data-media="watching">
+                            <strong>📺 Watching:</strong> <a href="https://tv.apple.com/us/show/murderbot/umc.cmc.5owrzntj9v1gpg31wshflud03" target="_blank" style="color: var(--primary-teal); text-decoration: none;">The Murderbot Diaries</a> <span style="color: var(--medium-gray); font-size: 0.9em;">(20% complete)</span><br>
+                            <em style="color: var(--medium-gray); font-size: 0.95em;">Sarcastic SecUnit discovers humanity while protecting humans from themselves</em>
+                        </p>
+                        
+                        <div data-media="last-updated" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(98, 203, 201, 0.2);">
+                            <small style="color: var(--medium-gray); font-style: italic;">
+                                💬 Media updates coming soon - real-time tracking in progress!
+                            </small>
+                        </div>
                     </div>
 
                     <div class="interests">
@@ -1140,6 +1159,201 @@
             el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
             observer.observe(el);
         });
+
+        // Dynamic Media Rotation System
+        class MediaRotationUpdater {
+            constructor(workerUrl = 'https://your-worker.your-subdomain.workers.dev') {
+                this.workerUrl = workerUrl;
+                this.cacheKey = 'media-rotation-cache';
+                this.cacheExpiry = 60 * 60 * 1000; // 1 hour
+            }
+
+            async init() {
+                const cachedData = this.getFromCache();
+                if (cachedData) {
+                    this.updateUI(cachedData);
+                }
+
+                try {
+                    const freshData = await this.fetchMediaData();
+                    this.updateUI(freshData);
+                    this.saveToCache(freshData);
+                } catch (error) {
+                    console.warn('Failed to fetch fresh media data:', error);
+                    if (!cachedData) {
+                        this.showFallbackContent();
+                    }
+                }
+            }
+
+            async fetchMediaData() {
+                const response = await fetch(`${this.workerUrl}/media-rotation`);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                return await response.json();
+            }
+
+            getFromCache() {
+                try {
+                    const cached = localStorage.getItem(this.cacheKey);
+                    if (!cached) return null;
+                    
+                    const { data, timestamp } = JSON.parse(cached);
+                    const isExpired = Date.now() - timestamp > this.cacheExpiry;
+                    
+                    return isExpired ? null : data;
+                } catch (error) {
+                    return null;
+                }
+            }
+
+            saveToCache(data) {
+                try {
+                    const cacheData = { data, timestamp: Date.now() };
+                    localStorage.setItem(this.cacheKey, JSON.stringify(cacheData));
+                } catch (error) {
+                    console.warn('Cache write error:', error);
+                }
+            }
+
+            updateUI(mediaData) {
+                this.updateGaming(mediaData.gaming);
+                this.updateReading(mediaData.reading);
+                this.updateMusic(mediaData.music);
+                this.updateWatching(mediaData.watching);
+                this.updateLastUpdated(mediaData.lastUpdated);
+            }
+
+            updateGaming(data) {
+                const container = document.querySelector('[data-media="gaming"]');
+                if (!container) return;
+
+                const progressText = data.progress ? ` <span style="color: var(--medium-gray); font-size: 0.9em;">(${data.progress} complete)</span>` : '';
+                const platformText = data.platform ? ` on ${data.platform}` : '';
+                
+                container.innerHTML = `
+                    <strong>🎮 Gaming:</strong> 
+                    <a href="${data.url}" target="_blank" style="color: var(--primary-teal); text-decoration: none;">${data.title}</a>${progressText}<br>
+                    <em style="color: var(--medium-gray); font-size: 0.95em;">${data.description}${platformText}</em>
+                `;
+            }
+
+            updateReading(data) {
+                const container = document.querySelector('[data-media="reading"]');
+                if (!container) return;
+
+                const progressText = data.progress ? ` <span style="color: var(--medium-gray); font-size: 0.9em;">(${data.progress} complete)</span>` : '';
+                const authorText = data.author ? ` by ${data.author}` : '';
+                
+                container.innerHTML = `
+                    <strong>📚 Reading:</strong> 
+                    <a href="${data.url}" target="_blank" style="color: var(--primary-teal); text-decoration: none;">${data.title}</a>${authorText}${progressText}<br>
+                    <em style="color: var(--medium-gray); font-size: 0.95em;">${data.description}</em>
+                `;
+            }
+
+            updateMusic(data) {
+                const container = document.querySelector('[data-media="music"]');
+                if (!container) return;
+
+                const artistText = data.artist ? ` by ${data.artist}` : '';
+                const albumText = data.album && data.album !== data.title ? ` from "${data.album}"` : '';
+                const nowPlayingIndicator = data.nowPlaying ? ' <span style="color: var(--heartland-red);">🔴 Now Playing</span>' : '';
+                
+                container.innerHTML = `
+                    <strong>🎵 Listening:</strong> 
+                    <a href="${data.url}" target="_blank" style="color: var(--primary-teal); text-decoration: none;">${data.title}</a>${artistText}${albumText}${nowPlayingIndicator}<br>
+                    <em style="color: var(--medium-gray); font-size: 0.95em;">${data.description}</em>
+                `;
+            }
+
+            updateWatching(data) {
+                const container = document.querySelector('[data-media="watching"]');
+                if (!container) return;
+
+                const progressText = data.progress ? ` <span style="color: var(--medium-gray); font-size: 0.9em;">(${data.progress} complete)</span>` : '';
+                const platformText = data.platform ? ` on ${data.platform}` : '';
+                const typeText = data.type ? ` • ${data.type}` : '';
+                const yearText = data.year ? ` (${data.year})` : '';
+                
+                container.innerHTML = `
+                    <strong>📺 Watching:</strong> 
+                    <a href="${data.url}" target="_blank" style="color: var(--primary-teal); text-decoration: none;">${data.title}</a>${yearText}${progressText}<br>
+                    <em style="color: var(--medium-gray); font-size: 0.95em;">${data.description}${typeText}${platformText}</em>
+                `;
+            }
+
+            updateLastUpdated(timestamp) {
+                const container = document.querySelector('[data-media="last-updated"]');
+                if (!container || !timestamp) return;
+
+                const date = new Date(timestamp);
+                const timeAgo = this.getTimeAgo(date);
+                
+                container.innerHTML = `
+                    <small style="color: var(--medium-gray); font-style: italic;">
+                        📡 Last updated: ${timeAgo}
+                    </small>
+                `;
+            }
+
+            getTimeAgo(date) {
+                const now = new Date();
+                const diffMs = now - date;
+                const diffMinutes = Math.floor(diffMs / 60000);
+                const diffHours = Math.floor(diffMinutes / 60);
+                const diffDays = Math.floor(diffHours / 24);
+
+                if (diffMinutes < 1) return 'just now';
+                if (diffMinutes < 60) return `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
+                if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+                return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+            }
+
+            async refresh() {
+                try {
+                    const freshData = await this.fetchMediaData();
+                    this.updateUI(freshData);
+                    this.saveToCache(freshData);
+                    this.showUpdateNotification('Media rotation updated!');
+                } catch (error) {
+                    console.error('Refresh failed:', error);
+                    this.showUpdateNotification('Update failed, using cached data');
+                }
+            }
+
+            showUpdateNotification(message) {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed; top: 20px; right: 20px; background: var(--primary-teal);
+                    color: white; padding: 12px 20px; border-radius: 25px; font-size: 0.9em;
+                    z-index: 1000; opacity: 0; transition: opacity 0.3s ease;
+                `;
+                notification.textContent = message;
+                
+                document.body.appendChild(notification);
+                setTimeout(() => notification.style.opacity = '1', 100);
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    setTimeout(() => document.body.removeChild(notification), 300);
+                }, 3000);
+            }
+        }
+
+        // Initialize media rotation system
+        // Update this URL when you deploy your worker
+        const workerUrl = 'https://media-rotation.your-subdomain.workers.dev';
+        const mediaUpdater = new MediaRotationUpdater(workerUrl);
+        
+        // Uncomment the next line when your worker is deployed
+        // mediaUpdater.init();
+        
+        // Make refresh function available globally
+        window.refreshMediaRotation = () => mediaUpdater.refresh();
+        
+        // Optional: Auto-refresh every 30 minutes
+        // setInterval(() => mediaUpdater.init(), 30 * 60 * 1000);
     </script>
 </body>
 </html>
