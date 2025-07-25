@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homelab Services - Chris Moore</title>
+    <title>Homelab Infrastructure Project - Chris Moore</title>
     <style>
         * {
             margin: 0;
@@ -74,6 +74,35 @@
             font-size: 1.3em;
             font-weight: 400;
             opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .stat-item {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--primary-teal);
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
         }
 
         /* Back link */
@@ -95,7 +124,7 @@
             transform: translateX(-5px);
         }
 
-        /* Service categories */
+        /* Section styles */
         .section {
             padding: 80px 0;
             position: relative;
@@ -104,10 +133,20 @@
         .section-title {
             font-size: 2.5em;
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 20px;
             color: var(--storm-navy);
             font-weight: 700;
             position: relative;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2em;
+            color: var(--medium-gray);
+            margin-bottom: 50px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .section-title::after {
@@ -122,15 +161,15 @@
             border-radius: 2px;
         }
 
-        /* Service grid */
-        .service-grid {
+        /* Project grid */
+        .project-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 30px;
             margin-top: 50px;
         }
 
-        .service-card {
+        .project-card {
             background: white;
             padding: 30px;
             border-radius: 20px;
@@ -139,12 +178,9 @@
             position: relative;
             overflow: hidden;
             border: 2px solid transparent;
-            text-decoration: none;
-            color: inherit;
-            display: block;
         }
 
-        .service-card::before {
+        .project-card::before {
             content: '';
             position: absolute;
             top: 0;
@@ -156,51 +192,79 @@
             transition: transform 0.3s ease;
         }
 
-        .service-card:hover {
+        .project-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 40px rgba(8, 31, 44, 0.15);
             border-color: var(--primary-teal);
         }
 
-        .service-card:hover::before {
+        .project-card:hover::before {
             transform: scaleX(1);
         }
 
-        .service-icon {
+        .project-icon {
             font-size: 2.5em;
             margin-bottom: 15px;
             display: block;
         }
 
-        .service-card h3 {
+        .project-card h3 {
             color: var(--storm-navy);
-            margin-bottom: 10px;
-            font-size: 1.3em;
+            margin-bottom: 15px;
+            font-size: 1.4em;
             font-weight: 600;
         }
 
-        .service-card p {
+        .project-description {
             color: var(--medium-gray);
-            font-size: 0.95em;
+            font-size: 1em;
             line-height: 1.6;
+            margin-bottom: 20px;
         }
 
-        .service-status {
+        .skills-used {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .skill-tag {
+            background: var(--cream);
+            color: var(--storm-navy);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: 500;
+            border: 1px solid rgba(98, 203, 201, 0.2);
+        }
+
+        .complexity-badge {
             position: absolute;
             top: 20px;
             right: 20px;
-            width: 12px;
-            height: 12px;
-            background: #27ae60;
-            border-radius: 50%;
-            box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.2);
-            animation: pulse 2s infinite;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: 600;
         }
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.2); }
-            50% { box-shadow: 0 0 0 8px rgba(39, 174, 96, 0); }
-            100% { box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.2); }
+        .complexity-high {
+            background: rgba(207, 51, 57, 0.1);
+            color: var(--heartland-red);
+            border: 1px solid rgba(207, 51, 57, 0.3);
+        }
+
+        .complexity-medium {
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+            border: 1px solid rgba(243, 156, 18, 0.3);
+        }
+
+        .complexity-advanced {
+            background: rgba(98, 203, 201, 0.1);
+            color: var(--primary-teal);
+            border: 1px solid rgba(98, 203, 201, 0.3);
         }
 
         /* Architecture section */
@@ -225,11 +289,51 @@
             color: var(--storm-navy);
             box-shadow: 0 5px 15px rgba(8, 31, 44, 0.1);
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .tech-badge:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 25px rgba(8, 31, 44, 0.15);
+        }
+
+        /* Skills showcase */
+        .skills-showcase {
+            background: var(--storm-navy);
+            color: white;
+            padding: 80px 0;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .skill-category {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .skill-category h4 {
+            color: var(--primary-teal);
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .skill-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .skill-list li {
+            padding: 8px 0;
+            opacity: 0.9;
         }
 
         /* Footer */
@@ -249,30 +353,6 @@
             text-decoration: underline;
         }
 
-        /* Category colors */
-        .management { border-top-color: #3498db; }
-        .monitoring { border-top-color: #2ecc71; }
-        .applications { border-top-color: #e74c3c; }
-        .infrastructure { border-top-color: #f39c12; }
-
-        /* Quick access links styling */
-        .quick-link {
-            color: white !important;
-            text-decoration: none !important;
-            padding: 10px 15px;
-            border-radius: 10px;
-            display: block;
-            transition: all 0.3s ease;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .quick-link:hover {
-            background: rgba(98, 203, 201, 0.2);
-            border-color: var(--primary-teal);
-            transform: translateX(5px);
-        }
-
         /* Responsive */
         @media (max-width: 768px) {
             .header h1 {
@@ -281,6 +361,10 @@
             
             .section-title {
                 font-size: 2em;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
@@ -294,209 +378,305 @@
                     <span>←</span>
                     <span>Back to Portfolio</span>
                 </a>
-                <h1>Homelab Infrastructure</h1>
-                <p class="subtitle">Self-Hosted Services & Automation Platform</p>
+                <h1>Homelab Infrastructure Project</h1>
+                <p class="subtitle">Self-Hosted Cloud Platform & DevOps Demonstration</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">28</div>
+                        <div class="stat-label">Services</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">6</div>
+                        <div class="stat-label">Deployment Phases</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Uptime</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Self-Hosted</div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Management Services -->
+    <!-- Project Overview -->
     <section class="section">
         <div class="container">
-            <h2 class="section-title">Management & Control</h2>
-            <div class="service-grid">
-                <a href="https://home.chrispaulmoore.com" class="service-card management" target="_blank">
-                    <span class="service-status"></span>
-                    <span class="service-icon">🏠</span>
-                    <h3>Homepage</h3>
-                    <p>Central dashboard for all homelab services with real-time status monitoring and quick access links.</p>
-                </a>
-                <a href="https://docker.chrispaulmoore.com" class="service-card management" target="_blank">
-                    <span class="service-status"></span>
-                    <span class="service-icon">🐳</span>
-                    <h3>Portainer</h3>
-                    <p>Docker container management interface for easy deployment, monitoring, and maintenance of services.</p>
-                </a>
+            <h2 class="section-title">Project Overview</h2>
+            <p class="section-subtitle">
+                A comprehensive self-hosted infrastructure showcasing DevOps practices, container orchestration, 
+                and modern cloud-native technologies. Built from scratch to demonstrate enterprise-level 
+                system administration and automation capabilities.
+            </p>
+            
+            <div class="project-grid">
+                <div class="project-card">
+                    <span class="complexity-badge complexity-advanced">Advanced</span>
+                    <span class="project-icon">🏗️</span>
+                    <h3>Infrastructure as Code</h3>
+                    <p class="project-description">
+                        Designed and implemented a complete containerized infrastructure using Docker Compose with 
+                        phased deployment strategy. All services configured through code with version control, 
+                        making the entire stack reproducible and maintainable.
+                    </p>
+                    <div class="skills-used">
+                        <span class="skill-tag">Docker</span>
+                        <span class="skill-tag">Docker Compose</span>
+                        <span class="skill-tag">Ubuntu Server</span>
+                        <span class="skill-tag">Linux Administration</span>
+                        <span class="skill-tag">YAML</span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <span class="complexity-badge complexity-high">Complex</span>
+                    <span class="project-icon">🔒</span>
+                    <h3>Zero-Trust Security Model</h3>
+                    <p class="project-description">
+                        Implemented enterprise-grade security using Cloudflare Tunnel for zero-exposure external access, 
+                        WireGuard VPN for secure remote administration, and Authentik SSO for centralized identity management. 
+                        No ports exposed to the internet except VPN.
+                    </p>
+                    <div class="skills-used">
+                        <span class="skill-tag">Cloudflare Tunnel</span>
+                        <span class="skill-tag">WireGuard VPN</span>
+                        <span class="skill-tag">Authentik SSO</span>
+                        <span class="skill-tag">SSL/TLS</span>
+                        <span class="skill-tag">Network Security</span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <span class="complexity-badge complexity-advanced">Advanced</span>
+                    <span class="project-icon">📊</span>
+                    <h3>Comprehensive Monitoring Stack</h3>
+                    <p class="project-description">
+                        Built a full observability platform using Prometheus for metrics collection, Grafana for 
+                        visualization, Loki for log aggregation, and Alertmanager for incident response. Provides 
+                        real-time insights into system performance and service health.
+                    </p>
+                    <div class="skills-used">
+                        <span class="skill-tag">Prometheus</span>
+                        <span class="skill-tag">Grafana</span>
+                        <span class="skill-tag">Loki</span>
+                        <span class="skill-tag">Alertmanager</span>
+                        <span class="skill-tag">PromQL</span>
+                        <span class="skill-tag">Metrics & Logging</span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <span class="complexity-badge complexity-medium">Intermediate</span>
+                    <span class="project-icon">🔄</span>
+                    <h3>Automated Workflows & CI/CD</h3>
+                    <p class="project-description">
+                        Implemented automated container updates with Watchtower, backup automation with Duplicati, 
+                        and workflow automation using n8n. Recently added comprehensive testing suite using Playwright 
+                        for service validation and uptime monitoring.
+                    </p>
+                    <div class="skills-used">
+                        <span class="skill-tag">Watchtower</span>
+                        <span class="skill-tag">n8n Workflows</span>
+                        <span class="skill-tag">Playwright Testing</span>
+                        <span class="skill-tag">Backup Automation</span>
+                        <span class="skill-tag">GitHub Actions</span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <span class="complexity-badge complexity-high">Complex</span>
+                    <span class="project-icon">🗄️</span>
+                    <h3>Database & Storage Management</h3>
+                    <p class="project-description">
+                        Configured and optimized multiple database systems including MariaDB for application data, 
+                        PostgreSQL for authentication services, and Redis for caching. Implemented automated backups 
+                        and data persistence strategies across all services.
+                    </p>
+                    <div class="skills-used">
+                        <span class="skill-tag">MariaDB</span>
+                        <span class="skill-tag">PostgreSQL</span>
+                        <span class="skill-tag">Redis</span>
+                        <span class="skill-tag">Database Administration</span>
+                        <span class="skill-tag">Data Persistence</span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <span class="complexity-badge complexity-advanced">Advanced</span>
+                    <span class="project-icon">🌐</span>
+                    <h3>Network Architecture & DNS</h3>
+                    <p class="project-description">
+                        Designed a sophisticated network topology with isolated Docker networks, custom DNS routing, 
+                        and dual-access patterns (public HTTPS + private VPN). Configured nginx reverse proxy for 
+                        internal routing and service discovery.
+                    </p>
+                    <div class="skills-used">
+                        <span class="skill-tag">Network Design</span>
+                        <span class="skill-tag">DNS Management</span>
+                        <span class="skill-tag">Nginx Proxy</span>
+                        <span class="skill-tag">Docker Networks</span>
+                        <span class="skill-tag">Cloudflare API</span>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Monitoring Services -->
-    <section class="section" style="background: white;">
-        <div class="container">
-            <h2 class="section-title">Monitoring & Analytics</h2>
-            <div class="service-grid">
-                <a href="https://metrics.chrispaulmoore.com" class="service-card monitoring" target="_blank">
-                    <span class="service-status"></span>
-                    <span class="service-icon">📊</span>
-                    <h3>Grafana</h3>
-                    <p>Beautiful metric visualization dashboards for system performance, container stats, and custom analytics.</p>
-                </a>
-                <a href="https://prometheus.chrispaulmoore.com" class="service-card monitoring" target="_blank">
-                    <span class="service-status"></span>
-                    <span class="service-icon">🎯</span>
-                    <h3>Prometheus</h3>
-                    <p>Time-series metrics collection and alerting system monitoring all infrastructure components.</p>
-                </a>
-                <a href="https://uptime.chrispaulmoore.com" class="service-card monitoring" target="_blank">
-                    <span class="service-status"></span>
-                    <span class="service-icon">✅</span>
-                    <h3>Uptime Kuma</h3>
-                    <p>Service uptime monitoring with instant notifications and historical availability tracking.</p>
-                </a>
-                <a href="https://monitor.chrispaulmoore.com" class="service-card monitoring" target="_blank">
-                    <span class="service-status"></span>
-                    <span class="service-icon">📈</span>
-                    <h3>Netdata</h3>
-                    <p>Real-time system performance monitoring with detailed metrics for CPU, memory, network, and disk usage.</p>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Applications -->
-    <section class="section">
-        <div class="container">
-            <h2 class="section-title">Applications & Services</h2>
-            <div class="service-grid">
-                <a href="https://vault.chrispaulmoore.com" class="service-card applications" target="_blank">
-                    <span class="service-status"></span>
-                    <span class="service-icon">🔐</span>
-                    <h3>Vaultwarden</h3>
-                    <p>Self-hosted password manager compatible with Bitwarden clients for secure credential storage.</p>
-                </a>
-                <a href="https://cloud.chrispaulmoore.com" class="service-card applications" target="_blank">
-                    <span class="service-status"></span>
-                    <span class="service-icon">☁️</span>
-                    <h3>Nextcloud</h3>
-                    <p>Private cloud storage solution with file sync, sharing, and collaboration features.</p>
-                </a>
-                <a href="https://media.chrispaulmoore.com" class="service-card applications" target="_blank">
-                    <span class="service-status"></span>
-                    <span class="service-icon">🎬</span>
-                    <h3>Jellyfin</h3>
-                    <p>Media server for streaming personal video, music, and photo collections across devices.</p>
-                </a>
-                <a href="https://pdf.chrispaulmoore.com" class="service-card applications" target="_blank">
-                    <span class="service-status"></span>
-                    <span class="service-icon">📄</span>
-                    <h3>Stirling PDF</h3>
-                    <p>Comprehensive PDF manipulation toolkit with merge, split, convert, and editing capabilities.</p>
-                </a>
-                <a href="https://docs.chrispaulmoore.com" class="service-card applications" target="_blank">
-                    <span class="service-status"></span>
-                    <span class="service-icon">📋</span>
-                    <h3>Paperless-ngx</h3>
-                    <p>Document management system with OCR, tagging, and automated organization features.</p>
-                </a>
-                <a href="https://obsidian.chrispaulmoore.com" class="service-card applications" target="_blank">
-                    <span class="service-status"></span>
-                    <span class="service-icon">📝</span>
-                    <h3>Obsidian Wiki</h3>
-                    <p>Interactive documentation editor with graph view, live preview, and cross-linking capabilities.</p>
-                </a>
-                <a href="https://auth.chrispaulmoore.com" class="service-card infrastructure" target="_blank">
-                    <span class="service-status"></span>
-                    <span class="service-icon">🔐</span>
-                    <h3>Authentik</h3>
-                    <p>Single Sign-On and identity provider for secure authentication across all services.</p>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Architecture -->
+    <!-- Technical Architecture -->
     <section class="architecture">
         <div class="container">
             <h2 class="section-title">Technical Architecture</h2>
-            <p style="text-align: center; max-width: 800px; margin: 0 auto 40px; font-size: 1.1em; color: var(--medium-gray);">
-                Built on Ubuntu Server with Docker containerization, secured through Cloudflare Tunnel for zero-trust access without port forwarding.
+            <p class="section-subtitle">
+                Modern cloud-native stack built on open-source technologies with enterprise-grade security and monitoring
             </p>
             <div class="tech-stack">
-                <div class="tech-badge">🐧 Ubuntu Server</div>
-                <div class="tech-badge">🐳 Docker & Docker Compose</div>
+                <div class="tech-badge">🐧 Ubuntu 24.04 LTS</div>
+                <div class="tech-badge">🐳 Docker & Compose</div>
                 <div class="tech-badge">🛡️ Cloudflare Tunnel</div>
-                <div class="tech-badge">🔒 HTTPS Everywhere</div>
+                <div class="tech-badge">🔐 WireGuard VPN</div>
                 <div class="tech-badge">📊 Prometheus Stack</div>
-                <div class="tech-badge">🗄️ MariaDB</div>
-                <div class="tech-badge">📝 Loki & Promtail</div>
-                <div class="tech-badge">🏠 Home Assistant</div>
+                <div class="tech-badge">🗄️ Multi-Database</div>
+                <div class="tech-badge">🔑 Authentik SSO</div>
+                <div class="tech-badge">🔄 Automated CI/CD</div>
+                <div class="tech-badge">📋 Infrastructure as Code</div>
+                <div class="tech-badge">🧪 Automated Testing</div>
+                <div class="tech-badge">☁️ Self-Hosted Cloud</div>
+                <div class="tech-badge">🏠 IoT Integration</div>
             </div>
         </div>
     </section>
 
-    <!-- Infrastructure Services -->
+    <!-- Skills Demonstrated -->
+    <section class="skills-showcase">
+        <div class="container">
+            <h2 class="section-title" style="color: white;">Skills Demonstrated</h2>
+            <p class="section-subtitle" style="color: rgba(255,255,255,0.8);">
+                This project showcases a comprehensive set of technical skills across multiple domains
+            </p>
+            
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <span style="font-size: 2em; margin-bottom: 15px; display: block;">🛠️</span>
+                    <h4>DevOps & Infrastructure</h4>
+                    <ul class="skill-list">
+                        <li>Container Orchestration</li>
+                        <li>Infrastructure as Code</li>
+                        <li>CI/CD Pipeline Design</li>
+                        <li>Service Mesh Architecture</li>
+                        <li>Zero-Downtime Deployments</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category">
+                    <span style="font-size: 2em; margin-bottom: 15px; display: block;">🔒</span>
+                    <h4>Security & Networking</h4>
+                    <ul class="skill-list">
+                        <li>Zero-Trust Architecture</li>
+                        <li>VPN Configuration</li>
+                        <li>SSL/TLS Management</li>
+                        <li>Identity & Access Management</li>
+                        <li>Network Segmentation</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category">
+                    <span style="font-size: 2em; margin-bottom: 15px; display: block;">📊</span>
+                    <h4>Monitoring & Observability</h4>
+                    <ul class="skill-list">
+                        <li>Metrics Collection & Analysis</li>
+                        <li>Log Aggregation Systems</li>
+                        <li>Performance Monitoring</li>
+                        <li>Alert Management</li>
+                        <li>Dashboard Creation</li>
+                    </ul>
+                </div>
+                
+                <div class="skill-category">
+                    <span style="font-size: 2em; margin-bottom: 15px; display: block;">🗄️</span>
+                    <h4>Data & Storage</h4>
+                    <ul class="skill-list">
+                        <li>Database Administration</li>
+                        <li>Backup & Recovery</li>
+                        <li>Data Persistence Strategies</li>
+                        <li>Storage Optimization</li>
+                        <li>Disaster Recovery Planning</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Outcomes -->
     <section class="section">
         <div class="container">
-            <h2 class="section-title">Infrastructure Components</h2>
-            <div class="service-grid">
-                <div class="service-card infrastructure">
-                    <span class="service-icon">🗄️</span>
-                    <h3>MariaDB</h3>
-                    <p>Database backend for Nextcloud and other services requiring persistent data storage.</p>
+            <h2 class="section-title">Project Outcomes & Value</h2>
+            <p class="section-subtitle">
+                What this project demonstrates about technical capabilities and problem-solving approach
+            </p>
+            
+            <div class="project-grid">
+                <div class="project-card">
+                    <span class="project-icon">🎯</span>
+                    <h3>Enterprise-Ready Solutions</h3>
+                    <p class="project-description">
+                        Designed with enterprise principles: high availability, security-first approach, 
+                        comprehensive monitoring, and automated operations. Demonstrates ability to architect 
+                        production-ready systems that scale and maintain themselves.
+                    </p>
                 </div>
-                <div class="service-card infrastructure">
-                    <span class="service-icon">📋</span>
-                    <h3>Loki</h3>
-                    <p>Log aggregation system collecting and indexing logs from all containers and services.</p>
+
+                <div class="project-card">
+                    <span class="project-icon">⚡</span>
+                    <h3>Performance Optimization</h3>
+                    <p class="project-description">
+                        Optimized for minimal resource usage while maximizing capability. Running 28 services 
+                        on modest hardware with excellent performance through careful resource management 
+                        and efficient architecture decisions.
+                    </p>
                 </div>
-                <div class="service-card infrastructure">
-                    <span class="service-icon">🔍</span>
-                    <h3>Node Exporter</h3>
-                    <p>System metrics exporter providing detailed hardware and OS metrics to Prometheus.</p>
+
+                <div class="project-card">
+                    <span class="project-icon">🔧</span>
+                    <h3>Problem-Solving Methodology</h3>
+                    <p class="project-description">
+                        Demonstrates systematic approach to complex technical challenges: research, planning, 
+                        implementation, testing, and documentation. Each component was carefully evaluated 
+                        and integrated following best practices.
+                    </p>
                 </div>
-                <div class="service-card infrastructure">
-                    <span class="service-icon">📦</span>
-                    <h3>cAdvisor</h3>
-                    <p>Container metrics analyzer providing resource usage and performance data.</p>
-                </div>
-                <div class="service-card infrastructure">
-                    <span class="service-icon">🚨</span>
-                    <h3>Alertmanager</h3>
-                    <p>Alert routing and management for Prometheus-based monitoring alerts.</p>
-                </div>
-                <div class="service-card infrastructure">
-                    <span class="service-icon">🏠</span>
-                    <h3>Home Assistant</h3>
-                    <p>Home automation platform for smart device control and automation workflows.</p>
+
+                <div class="project-card">
+                    <span class="project-icon">📚</span>
+                    <h3>Continuous Learning</h3>
+                    <p class="project-description">
+                        Self-taught implementation of cutting-edge technologies through documentation study, 
+                        community engagement, and hands-on experimentation. Showcases ability to rapidly 
+                        acquire new technical skills and apply them effectively.
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Quick Access Dashboard -->
+    <!-- Call to Action -->
     <section class="section" style="background: linear-gradient(135deg, var(--storm-navy) 0%, rgba(8, 31, 44, 0.95) 100%); color: white;">
         <div class="container">
-            <h2 class="section-title" style="color: white;">Quick Access Dashboard</h2>
-            <p style="text-align: center; max-width: 800px; margin: 0 auto 40px; font-size: 1.1em; opacity: 0.9;">
-                All services are accessible via HTTPS through Cloudflare Tunnel. Click any service below for direct access.
+            <h2 class="section-title" style="color: white;">Ready to Discuss Your Infrastructure Needs?</h2>
+            <p style="text-align: center; max-width: 600px; margin: 0 auto 40px; font-size: 1.2em; opacity: 0.9;">
+                This homelab project demonstrates hands-on experience with modern DevOps practices, 
+                security implementation, and system architecture. Let's discuss how these skills 
+                can benefit your organization.
             </p>
-            <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 20px; backdrop-filter: blur(10px);">
-                <h3 style="color: var(--primary-teal); margin-bottom: 20px;">🔗 Direct Service Links</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
-                    <a href="https://chrispaulmoore.com" class="quick-link" target="_blank">📄 chrispaulmoore.com - Portfolio</a>
-                    <a href="https://www.chrispaulmoore.com" class="quick-link" target="_blank">📄 www.chrispaulmoore.com - Portfolio (www)</a>
-                    <a href="https://home.chrispaulmoore.com" class="quick-link" target="_blank">🏠 home.chrispaulmoore.com - Homepage</a>
-                    <a href="https://docker.chrispaulmoore.com" class="quick-link" target="_blank">🐳 docker.chrispaulmoore.com - Portainer</a>
-                    <a href="https://metrics.chrispaulmoore.com" class="quick-link" target="_blank">📊 metrics.chrispaulmoore.com - Grafana</a>
-                    <a href="https://uptime.chrispaulmoore.com" class="quick-link" target="_blank">✅ uptime.chrispaulmoore.com - Uptime Kuma</a>
-                    <a href="https://monitor.chrispaulmoore.com" class="quick-link" target="_blank">📈 monitor.chrispaulmoore.com - Netdata</a>
-                    <a href="https://prometheus.chrispaulmoore.com" class="quick-link" target="_blank">🎯 prometheus.chrispaulmoore.com - Prometheus</a>
-                    <a href="https://vault.chrispaulmoore.com" class="quick-link" target="_blank">🔐 vault.chrispaulmoore.com - Vaultwarden</a>
-                    <a href="https://cloud.chrispaulmoore.com" class="quick-link" target="_blank">☁️ cloud.chrispaulmoore.com - Nextcloud</a>
-                    <a href="https://media.chrispaulmoore.com" class="quick-link" target="_blank">🎬 media.chrispaulmoore.com - Jellyfin</a>
-                    <a href="https://pdf.chrispaulmoore.com" class="quick-link" target="_blank">📄 pdf.chrispaulmoore.com - Stirling PDF</a>
-                    <a href="https://docs.chrispaulmoore.com" class="quick-link" target="_blank">📋 docs.chrispaulmoore.com - Paperless-ngx</a>
-                    <a href="https://obsidian.chrispaulmoore.com" class="quick-link" target="_blank">📝 obsidian.chrispaulmoore.com - Obsidian Wiki</a>
-                    <a href="https://auth.chrispaulmoore.com" class="quick-link" target="_blank">🔐 auth.chrispaulmoore.com - Authentik</a>
-                </div>
-            </div>
-            <div style="margin-top: 30px; text-align: center;">
-                <p style="opacity: 0.8;">🚀 All services running on Ubuntu Server with Docker • 🔒 Secured via Cloudflare Tunnel • ⚡ 23 containers active</p>
-            </div>
-            <div style="margin-top: 30px; text-align: center;">
-                <a href="https://obsidian.chrispaulmoore.com" style="display: inline-block; padding: 15px 40px; background: linear-gradient(45deg, var(--primary-teal), var(--heartland-red)); color: white; text-decoration: none; border-radius: 30px; font-weight: bold; font-size: 1.1em; transition: all 0.3s ease; box-shadow: 0 5px 20px rgba(0,0,0,0.3);" target="_blank">
-                    📝 Open Interactive Wiki Editor
+            <div style="text-align: center;">
+                <a href="/" style="display: inline-block; padding: 15px 40px; background: linear-gradient(45deg, var(--primary-teal), var(--heartland-red)); color: white; text-decoration: none; border-radius: 30px; font-weight: bold; font-size: 1.1em; transition: all 0.3s ease; box-shadow: 0 5px 20px rgba(0,0,0,0.3); margin-right: 20px;">
+                    💼 View Full Portfolio
+                </a>
+                <a href="mailto:chris@chrispaulmoore.com" style="display: inline-block; padding: 15px 40px; background: rgba(255,255,255,0.1); color: white; text-decoration: none; border-radius: 30px; font-weight: bold; font-size: 1.1em; transition: all 0.3s ease; border: 2px solid var(--primary-teal);">
+                    📧 Get In Touch
                 </a>
             </div>
         </div>
@@ -505,38 +685,11 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>© 2025 Chris Moore | <a href="/">Back to Portfolio</a> | <a href="mailto:chris@chrispaulmoore.com">Contact</a></p>
+            <p>© 2025 Chris Moore | <a href="/">Portfolio</a> | <a href="mailto:chris@chrispaulmoore.com">Contact</a></p>
             <p style="margin-top: 10px; opacity: 0.8; font-size: 0.9em;">
-                Powered by open-source technologies and Kansas City determination
+                Built with determination and powered by open-source innovation
             </p>
         </div>
     </footer>
-
-    <script>
-        // Smooth scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Add hover effects
-        const cards = document.querySelectorAll('.service-card');
-        cards.forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-5px)';
-            });
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0)';
-            });
-        });
-    </script>
 </body>
 </html>
