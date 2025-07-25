@@ -2,18 +2,16 @@ name = "comments-system"
 main = "cloudflare-worker.js"
 compatibility_date = "2024-01-01"
 
-# KV namespace for storing comments
-[[kv_namespaces]]
-binding = "COMMENTS_KV"
-id = "your-kv-namespace-id-here"
-preview_id = "your-preview-kv-namespace-id-here"
-
-# Custom domain configuration
-[env.production]
-name = "comments-system"
+# Routes for custom domain
 routes = [
   "comments.chrispaulmoore.com/*"
 ]
+
+# KV namespace for storing comments
+[[kv_namespaces]]
+binding = "COMMENTS_KV"
+id = "f5826a4b237f42da88d729904a9bb318"
+preview_id = "02d6d4aa2f2b44c7b4a2616ecae38e2a"
 
 # Environment variables (if needed)
 [vars]
