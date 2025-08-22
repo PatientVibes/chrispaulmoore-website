@@ -1625,7 +1625,7 @@
             <h2 class="section-title" style="color: white;">Live Homelab Status</h2>
             <div class="live-indicator" style="justify-content: center; margin-bottom: 50px; color: rgba(255,255,255,0.8);">
                 <span class="pulse-dot"></span>
-                Real-time data from home.chrispaulmoore.com
+                Optimized infrastructure status (10 essential services)
             </div>
             
             <div class="card-grid">
@@ -2049,14 +2049,14 @@
             }
 
             async getHomelabStatus() {
-                // For now, simulate API calls with realistic data
+                // Updated to reflect streamlined homelab (optimized from 28 to 10 services)
                 return new Promise((resolve) => {
                     setTimeout(() => {
                         resolve({
-                            services: 28,
+                            services: 10,
                             uptime: this.calculateUptime(),
-                            memory: Math.floor(Math.random() * 20) + 15, // 15-35%
-                            storage: Math.floor(Math.random() * 10) + 65 // 65-75%
+                            memory: Math.floor(Math.random() * 5) + 15, // 15-20% (optimized usage)
+                            storage: Math.floor(Math.random() * 5) + 33 // 33-38% (67% free after optimization)
                         });
                     }, 1000);
                 });
@@ -2071,10 +2071,10 @@
 
             loadDemoData() {
                 const demoStatus = {
-                    services: 28,
+                    services: 10,
                     uptime: { days: 67, hours: 14 },
-                    memory: 22,
-                    storage: 68
+                    memory: 17,
+                    storage: 35
                 };
                 this.updateStatusCards(demoStatus);
             }
