@@ -383,15 +383,15 @@
                 
                 <div class="stats-grid">
                     <div class="stat-item">
-                        <div class="stat-number">10</div>
+                        <div class="stat-number">7</div>
                         <div class="stat-label">Essential Services</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number">64%</div>
+                        <div class="stat-number">75%</div>
                         <div class="stat-label">Resource Optimization</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number">83%</div>
+                        <div class="stat-number">92%</div>
                         <div class="stat-label">RAM Available</div>
                     </div>
                     <div class="stat-item">
@@ -437,14 +437,14 @@
                     <span class="project-icon">🔒</span>
                     <h3>Zero-Trust Security Model</h3>
                     <p class="project-description">
-                        Implemented enterprise-grade security using Cloudflare Tunnel for zero-exposure external access, 
-                        WireGuard VPN for secure remote administration, and Authentik SSO for centralized identity management. 
-                        No ports exposed to the internet except VPN.
+                        Implemented enterprise-grade security using Cloudflare Tunnel for zero-exposure external access
+                        and WireGuard VPN for secure remote administration.
+                        No ports exposed to the internet except VPN, with UFW firewall restricting all service access.
                     </p>
                     <div class="skills-used">
                         <span class="skill-tag">Cloudflare Tunnel</span>
                         <span class="skill-tag">WireGuard VPN</span>
-                        <span class="skill-tag">Authentik SSO</span>
+                        <span class="skill-tag">UFW Firewall</span>
                         <span class="skill-tag">SSL/TLS</span>
                         <span class="skill-tag">Network Security</span>
                     </div>
@@ -455,8 +455,8 @@
                     <span class="project-icon">⚡</span>
                     <h3>Infrastructure Optimization</h3>
                     <p class="project-description">
-                        Strategically reduced infrastructure from 28 to 10 essential services, achieving 64% reduction 
-                        in complexity while maintaining full functionality. Freed 83% of system RAM and 67% of disk space 
+                        Strategically reduced infrastructure from 28 to 7 essential services, achieving 75% reduction
+                        in complexity while maintaining full functionality. Freed 92% of system RAM and 98% of disk space
                         through careful analysis of service dependencies and business value.
                     </p>
                     <div class="skills-used">
@@ -473,15 +473,15 @@
                     <span class="project-icon">🔄</span>
                     <h3>Streamlined Operations</h3>
                     <p class="project-description">
-                        Implemented essential automation with Watchtower for updates and Duplicati for backups. 
-                        Eliminated unnecessary complexity while maintaining operational excellence through strategic 
-                        service selection and simplified maintenance workflows.
+                        Implemented essential automation with Watchtower for daily container updates and Uptime Kuma for
+                        service monitoring. Eliminated unnecessary complexity while maintaining operational excellence
+                        through strategic service selection and simplified maintenance workflows.
                     </p>
                     <div class="skills-used">
                         <span class="skill-tag">Watchtower</span>
-                        <span class="skill-tag">n8n Workflows</span>
-                        <span class="skill-tag">Playwright Testing</span>
-                        <span class="skill-tag">Backup Automation</span>
+                        <span class="skill-tag">Uptime Kuma</span>
+                        <span class="skill-tag">Homepage Dashboard</span>
+                        <span class="skill-tag">Unattended Upgrades</span>
                         <span class="skill-tag">GitHub Actions</span>
                     </div>
                 </div>
@@ -489,18 +489,18 @@
                 <div class="project-card">
                     <span class="complexity-badge complexity-high">Complex</span>
                     <span class="project-icon">🗄️</span>
-                    <h3>Database & Storage Management</h3>
+                    <h3>Media & Home Automation</h3>
                     <p class="project-description">
-                        Configured and optimized multiple database systems including MariaDB for application data, 
-                        PostgreSQL for authentication services, and Redis for caching. Implemented automated backups 
-                        and data persistence strategies across all services.
+                        Deployed Jellyfin media server with HDHomeRun FLEX 4K DVR integration, automated commercial
+                        detection via Comskip, and subtitle extraction. Home Assistant manages Zigbee devices with
+                        Cloudflare Tunnel providing secure remote access to all services.
                     </p>
                     <div class="skills-used">
-                        <span class="skill-tag">MariaDB</span>
-                        <span class="skill-tag">PostgreSQL</span>
-                        <span class="skill-tag">Redis</span>
-                        <span class="skill-tag">Database Administration</span>
-                        <span class="skill-tag">Data Persistence</span>
+                        <span class="skill-tag">Jellyfin</span>
+                        <span class="skill-tag">Home Assistant</span>
+                        <span class="skill-tag">HDHomeRun DVR</span>
+                        <span class="skill-tag">Zigbee (ZBT-1)</span>
+                        <span class="skill-tag">Samba Shares</span>
                     </div>
                 </div>
 
@@ -509,16 +509,16 @@
                     <span class="project-icon">🌐</span>
                     <h3>Network Architecture & DNS</h3>
                     <p class="project-description">
-                        Designed a sophisticated network topology with isolated Docker networks, custom DNS routing, 
-                        and dual-access patterns (public HTTPS + private VPN). Configured nginx reverse proxy for 
-                        internal routing and service discovery.
+                        Designed a network topology with isolated Docker networks, Cloudflare DNS management,
+                        and dual-access patterns (public HTTPS via tunnel + private VPN). Services routed through
+                        Cloudflare Tunnel with QUIC transport to four edge locations.
                     </p>
                     <div class="skills-used">
                         <span class="skill-tag">Network Design</span>
-                        <span class="skill-tag">DNS Management</span>
-                        <span class="skill-tag">Nginx Proxy</span>
+                        <span class="skill-tag">Cloudflare DNS</span>
+                        <span class="skill-tag">Cloudflare Tunnel</span>
                         <span class="skill-tag">Docker Networks</span>
-                        <span class="skill-tag">Cloudflare API</span>
+                        <span class="skill-tag">QUIC Protocol</span>
                     </div>
                 </div>
             </div>
@@ -537,14 +537,14 @@
                 <div class="tech-badge">🐳 Docker & Compose</div>
                 <div class="tech-badge">🛡️ Cloudflare Tunnel</div>
                 <div class="tech-badge">🔐 WireGuard VPN</div>
-                <div class="tech-badge">🔑 Authentik SSO</div>
-                <div class="tech-badge">🖾 PostgreSQL</div>
-                <div class="tech-badge">🔄 Automated Updates</div>
-                <div class="tech-badge">📋 Infrastructure as Code</div>
+                <div class="tech-badge">🏠 Home Assistant</div>
+                <div class="tech-badge">🎬 Jellyfin + DVR</div>
+                <div class="tech-badge">🔄 Watchtower</div>
+                <div class="tech-badge">📊 Uptime Kuma</div>
                 <div class="tech-badge">☁️ GitHub Pages</div>
-                <div class="tech-badge">🏠 Home Automation</div>
-                <div class="tech-badge">💾 Backup Automation</div>
-                <div class="tech-badge">⚡ Resource Optimization</div>
+                <div class="tech-badge">🔥 UFW Firewall</div>
+                <div class="tech-badge">📁 Samba</div>
+                <div class="tech-badge">⚡ NVMe Storage</div>
             </div>
         </div>
     </section>
@@ -622,8 +622,8 @@
                     <span class="project-icon">🎯</span>
                     <h3>Strategic Architecture</h3>
                     <p class="project-description">
-                        Evolved from complex to optimized through strategic analysis. Maintained enterprise-grade 
-                        security and functionality while achieving 64% reduction in services and 83% improvement 
+                        Evolved from complex to optimized through strategic analysis. Maintained enterprise-grade
+                        security and functionality while achieving 75% reduction in services and 92% improvement
                         in resource availability. Demonstrates mature systems thinking.
                     </p>
                 </div>
@@ -632,8 +632,8 @@
                     <span class="project-icon">⚡</span>
                     <h3>Resource Efficiency Excellence</h3>
                     <p class="project-description">
-                        Achieved dramatic resource optimization: reduced from 28 to 10 essential services, 
-                        freed 20GB RAM and 10GB disk space. Demonstrates ability to identify core business 
+                        Achieved dramatic resource optimization: reduced from 28 to 7 essential services,
+                        freed 28GB RAM and 1.7TB disk space. Demonstrates ability to identify core business
                         value and eliminate unnecessary complexity while maintaining full functionality.
                     </p>
                 </div>
