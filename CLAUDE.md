@@ -36,22 +36,23 @@ Stay on the current stack. Vanilla HTML + inline `<style>` + inline SVG. The Dir
 3. Draft a second piece if needed.
 4. Rebuild `index.html` using Direction B visual vocabulary with repositioned content.
 
-## Current progress (2026-04-24)
+## Current state (2026-04-27)
 
-- **First draft essay:** `drafts/agent-harness-commitment-curve.md` (~2,650 words). Thesis: the 12-component agent-harness taxonomy from [Alex Ker's X post](https://x.com/thealexker/status/2045203785304232162) is better read as a **commitment curve** than a checklist. Components 1–6 are a foundation; 7–12 are discretionary investments justified by the axiom set of the deployment. Applied across two agents — `chorus-agent` (SS&C AI Gateway, enterprise/regulated) and `kindle-pipeline` (local Ollama, personal). Closes on an unresolved tension around token tracking.
-- The essay intentionally does **not** pitch, sell, or propose a new framework. It applies Alex Ker's taxonomy honestly and notes where it bends.
-- Both case studies draw from `D:\ai-agents\` on `hal-windows` (`chorus-agent/`, `kindle-pipeline/`). Karakeep (on `haldev`) is the article ingestion path feeding kindle-pipeline via nightly SMB export.
-- Draft not yet reviewed by Chris. Not linked from the site.
+- **Direction B rebuild shipped.** `index.html` is the constraint-based-discovery hub: BPMN-style hero diagram (Constraint → Structure), three axiom-system pillars (Enterprise/BPM, Agents/AI, Home Ops), §02 essay cards, §04 homelab topology updated for the current 12-service stack with Karakeep highlighted, §05 Lab cards, link-row footer. §03 Outcomes dropped per the repositioning brief.
+- **Two essays published** at `essays/<slug>.html`:
+  - `essays/agent-harness-commitment-curve.html` — applies Alex Ker's 12-component taxonomy to `chorus-agent` (regulated) and `kindle-pipeline` (local). Reframes 1–6 as floor and 7–12 as a commitment curve earned by the constraint set.
+  - `essays/karakeep-kindle-pipeline.html` — companion piece. Six-axiom derivation of the Karakeep → Kindle Scribe pipeline, with the SMB share as the seam between halves.
+  - Both essays passed a 12-agent editorial review (developmental, line, copy, technical fact-check, first reader, headline ×2). Factual claims verified against source repos on hal-windows and haldev.
+- **Build pipeline.** `build-essays.py` reads `drafts/*.md` and writes Direction B-styled `essays/<slug>.html` using `essay-template.html`. Mermaid blocks render client-side via mermaid.js v10. Run `python3 build-essays.py` after editing any draft.
+- Source-of-truth markdown lives in `drafts/`. `MANIFEST` in the build script controls essay numbering and tag.
+- Cross-essay links: each essay's footer links to the other.
 
-## Next steps (when Chris returns)
+## Active backlog
 
-1. Fresh-eye review of the draft. Factual corrections on chorus-agent and kindle-pipeline details (inferred from repo READMEs — verify).
-2. Decide: ship as-is, trim, expand, or rewrite.
-3. Pick the second piece of content. Strong candidates:
-   - **Karakeep → Kindle pipeline** as constraint-first engineering (hardware, format, context-window constraints shaping the design).
-   - **The homelab as an axiom set** (7 services, zero exposed ports, one shared Postgres — what emerges from that constraint set).
-4. Decide publishing venue for the essay. Current default: new blog section on this site once rebuilt. Alternatives: GitHub gist, personal substack, LinkedIn article.
-5. Start the `index.html` rebuild only after step 3.
+1. **Third piece of content.** Strong candidates per earlier planning: *the homelab as an axiom set* (12-service stack, zero exposed ports, what falls out of those constraints) or *D&D as constraint design* (encounter design as constraint propagation; named in §05 of the homepage).
+2. **Distribution / packaging.** Original titles are best for on-post / personal-blog. Per the headline-editor reviews, alternative titles exist for HN and social — keep canonical on-post and use alternates for distribution.
+3. **AI-agent harness for the editorial team.** Earlier conversation parked: an AI version of the 6-role review team (developmental / line / copy / technical / first-reader / headline) as a reusable harness for future essays.
+4. **OG image.** Currently points at `family-photo.jpg` from the old site. Direction B brief recommends a custom OG image in the same visual vocabulary; not built yet.
 
 ## Files not to touch without asking
 

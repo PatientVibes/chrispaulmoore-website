@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A reading pipeline I didn&#x27;t design — I derived — Chris Paul Moore.">
+    <meta name="author" content="Chris Paul Moore">
+    <link rel="canonical" href="https://chrispaulmoore.com/essays/karakeep-kindle-pipeline.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="A reading pipeline I didn&#x27;t design — I derived">
+    <meta property="og:description" content="I read on a Kindle Scribe. I save things to read on Karakeep. The pipeline between the two started as three scripts I wrote one weekend, and over a few…">
+    <meta property="og:url" content="https://chrispaulmoore.com/essays/karakeep-kindle-pipeline.html">
+    <meta property="og:site_name" content="Chris Paul Moore">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="A reading pipeline I didn&#x27;t design — I derived">
+    <meta name="twitter:description" content="I read on a Kindle Scribe. I save things to read on Karakeep. The pipeline between the two started as three scripts I wrote one weekend, and over a few…">
+    <title>A reading pipeline I didn&#x27;t design — I derived — chrispaulmoore.com</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0E0F10;
+            --panel: #0A0B0C;
+            --panel-soft: #121315;
+            --fg: #EDEAE2;
+            --fg-soft: rgba(237, 234, 226, 0.82);
+            --fg-dim: rgba(237, 234, 226, 0.45);
+            --line: rgba(237, 234, 226, 0.12);
+            --line-strong: rgba(237, 234, 226, 0.28);
+            --grid: rgba(237, 234, 226, 0.06);
+            --accent: #E49A4D;
+
+            --sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+            --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+            --serif: 'IBM Plex Serif', Georgia, serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background: var(--bg);
+            color: var(--fg);
+            font-family: var(--sans);
+            font-weight: 400;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 48px 48px;
+            opacity: 0.6;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .page {
+            position: relative;
+            z-index: 1;
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 32px 64px 64px;
+        }
+
+        a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 80ms; }
+        a:hover { border-bottom-color: var(--accent); }
+        a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+        ::selection { background: var(--accent); color: var(--bg); }
+
+        /* Nav */
+        .nav {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 40px;
+            align-items: center;
+            padding: 14px 20px;
+            border: 1px solid var(--line);
+            background: var(--bg);
+            font-family: var(--mono);
+            font-size: 12px;
+            margin-bottom: 64px;
+        }
+        .nav a { color: inherit; border: none; }
+        .nav-brand { display: flex; gap: 10px; align-items: center; }
+        .nav-brand-name { font-weight: 600; }
+        .nav-brand-domain { color: var(--fg-dim); }
+        .nav-routes { display: flex; gap: 28px; color: var(--fg-dim); justify-content: center; }
+        .nav-routes a:hover { color: var(--fg); }
+        .nav-routes .active { color: var(--fg); }
+        .nav-status { display: flex; gap: 14px; color: var(--fg-dim); }
+        .pulse-dot { color: var(--accent); animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        /* Article */
+        article {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .article-meta {
+            font-family: var(--mono);
+            font-size: 11px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--fg-dim);
+            margin-bottom: 24px;
+            display: flex;
+            gap: 18px;
+            border-bottom: 1px dashed var(--line-strong);
+            padding-bottom: 18px;
+        }
+        .article-meta .num { color: var(--accent); }
+
+        article h1 {
+            font-size: 48px;
+            font-weight: 500;
+            letter-spacing: -0.025em;
+            line-height: 1.05;
+            margin-bottom: 24px;
+        }
+        article .subtitle {
+            font-family: var(--serif);
+            font-style: italic;
+            font-size: 20px;
+            color: var(--fg-soft);
+            margin-bottom: 56px;
+            line-height: 1.5;
+        }
+
+        article h2 {
+            font-size: 26px;
+            font-weight: 500;
+            letter-spacing: -0.015em;
+            line-height: 1.2;
+            margin: 64px 0 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--line);
+        }
+        article h3 {
+            font-size: 19px;
+            font-weight: 600;
+            letter-spacing: -0.005em;
+            margin: 36px 0 12px;
+        }
+        article p {
+            font-size: 16.5px;
+            line-height: 1.7;
+            color: var(--fg-soft);
+            margin-bottom: 20px;
+        }
+        article p strong { color: var(--fg); font-weight: 600; }
+        article p em { color: var(--fg); font-style: italic; }
+
+        article ul, article ol {
+            font-size: 16.5px;
+            line-height: 1.7;
+            color: var(--fg-soft);
+            margin: 0 0 24px 28px;
+        }
+        article li { margin-bottom: 8px; }
+        article li strong { color: var(--fg); font-weight: 600; }
+
+        article blockquote {
+            border-left: 2px solid var(--accent);
+            padding: 4px 0 4px 20px;
+            margin: 24px 0;
+            font-family: var(--serif);
+            font-style: italic;
+            font-size: 18px;
+            color: var(--fg);
+        }
+        article blockquote p { font-family: inherit; font-size: inherit; color: inherit; }
+
+        article hr {
+            border: none;
+            border-top: 1px dashed var(--line-strong);
+            margin: 56px 0;
+        }
+
+        article code {
+            font-family: var(--mono);
+            font-size: 14px;
+            background: var(--panel-soft);
+            padding: 2px 6px;
+            border: 1px solid var(--line);
+            color: var(--fg);
+        }
+
+        article pre {
+            font-family: var(--mono);
+            font-size: 13.5px;
+            line-height: 1.55;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            padding: 18px 20px;
+            overflow-x: auto;
+            margin: 24px 0;
+            color: var(--fg);
+        }
+        article pre code {
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: inherit;
+        }
+
+        /* Mermaid block — overrides pre styling */
+        article pre.mermaid {
+            background: var(--bg);
+            border: 1px solid var(--line);
+            padding: 24px;
+            text-align: center;
+            color: var(--fg);
+            font-size: 12px;
+            display: block;
+        }
+        article pre.mermaid svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+
+        /* Trailing draft footer line */
+        article p:last-of-type em { color: var(--fg-dim); font-style: italic; }
+
+        /* Footer */
+        .article-foot {
+            max-width: 720px;
+            margin: 80px auto 0;
+            padding: 24px 20px;
+            border-top: 1px dashed var(--line-strong);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--mono);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--fg-dim);
+        }
+        .article-foot a { color: var(--accent); border: none; }
+        .article-foot a:hover { color: var(--fg); }
+
+        /* Responsive */
+        @media (max-width: 1199px) {
+            .page { padding: 24px 32px 48px; }
+            .nav { margin-bottom: 48px; }
+            article h1 { font-size: 38px; }
+            article .subtitle { font-size: 18px; margin-bottom: 40px; }
+        }
+        @media (max-width: 899px) {
+            body::before { background-size: 32px 32px; }
+            .page { padding: 16px 20px 32px; }
+            .nav { grid-template-columns: 1fr; gap: 12px; padding: 12px 14px; margin-bottom: 32px; }
+            .nav-routes { justify-content: flex-start; flex-wrap: wrap; gap: 14px; }
+            .nav-status { font-size: 11px; }
+            article h1 { font-size: 30px; }
+            article h2 { font-size: 22px; }
+            article p, article ul, article ol { font-size: 15.5px; }
+            .article-foot { flex-direction: column; gap: 12px; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <header class="nav" role="navigation">
+            <div class="nav-brand">
+                <a href="/" style="display:flex; gap:10px; align-items:center;">
+                    <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true">
+                        <rect x="1" y="7" width="8" height="8" fill="none" stroke="currentColor"/>
+                        <rect x="13" y="7" width="8" height="8" fill="none" stroke="currentColor"/>
+                        <path d="M9 11h4" stroke="currentColor"/>
+                        <circle cx="11" cy="11" r="1.2" fill="var(--accent)"/>
+                    </svg>
+                    <span class="nav-brand-name">cpm</span>
+                    <span class="nav-brand-domain">/ chrispaulmoore.com</span>
+                </a>
+            </div>
+            <nav class="nav-routes">
+                <a href="/">› index</a>
+                <a class="active" href="/#pieces">/pieces</a>
+                <a href="/#systems">/systems</a>
+                <a href="/homelab.html">/homelab</a>
+                <a href="/#lab">/lab</a>
+                <a href="/#connect">/connect</a>
+            </nav>
+            <div class="nav-status">
+                <span>KC · 39.09N</span>
+                <span><span class="pulse-dot">●</span> available</span>
+            </div>
+        </header>
+
+        <article>
+            <div class="article-meta">
+                <span class="num">PIECE / 002</span>
+                <span>2,526 words</span>
+                <span>ESSAY · HOME OPS</span>
+            </div>
+            <h1>A reading pipeline I didn&#x27;t design — I derived</h1>
+            
+            <p>I read on a Kindle Scribe. I save things to read on Karakeep. The pipeline between the two started as three scripts I wrote one weekend, and over a few months grew into something more interesting in retrospect than it was to build. Interesting because I didn&rsquo;t design it. I derived it. Each piece earns its place from a specific property of the constraint set, and what&rsquo;s there is exactly what survived the question <em>do I really need this?</em></p>
+<p>There is no architecture document. There is a list of things I refused to give up.</p>
+<h2>The constraints</h2>
+<p>These are the axioms. Everything below is a consequence.</p>
+<ol>
+<li><strong>The reading device is a Kindle Scribe.</strong> 10.3&rdquo; e-ink, slow refresh, paper-like contrast, no backlight. Critically, it accepts handwritten annotation via stylus, which is most of why I bought it. The output of the pipeline has to be a PDF sized for that device, with margins generous enough to write in.</li>
+<li><strong>The source corpus is heterogeneous.</strong> Web essays I bookmark on impulse, scanned books, OCR&rsquo;d academic papers, the occasional whitepaper. There is no single source format I can standardize on upstream.</li>
+<li><strong>The model runs locally.</strong> Ollama against <code>qwen3:8b</code> on a laptop. The constraint underneath is mostly privacy — I don&rsquo;t want my reading list sitting in someone else&rsquo;s inference logs — and partly that for personal reading there&rsquo;s no cost-justifiable case for cloud inference. Local model is the consequence.</li>
+<li><strong>One user, no SLA.</strong> The cost of a bad run is that I reread a paragraph. There is no operations team. There is no on-call.</li>
+<li><strong>The artifacts should be portable.</strong> When I finish reading something, I want the markdown in my Obsidian vault. I don&rsquo;t want a proprietary format I&rsquo;ll regret in three years.</li>
+<li><strong>The reading should feel like reading.</strong> Serif body, generous leading, an accent color on the title page. Pleasure of use is a real constraint — the pipeline outputs a document I read for an hour at a stretch, not a printout.</li>
+</ol>
+<p>That&rsquo;s the constraint set. Some of it is post-hoc — the Scribe was bought before the pipeline existed; the local-model preference is partly principle and partly pragmatism — but those are the things I refused to give up once I started building, which is what an axiom set in practice usually is.</p>
+<h2>Karakeep as the inbox</h2>
+<p>The bookmarking layer is <a href="https://karakeep.app">Karakeep</a>, self-hosted on my home server. It runs as a Docker stack: the app itself, a Meilisearch instance for full-text search, and an alpine-chrome sidecar that does headless browser archiving. I save articles to it from my phone, my laptop, and the share sheet on whatever device happens to be in my hand. One tap, one save.</p>
+<p>What I get for free, per bookmark:</p>
+<ul>
+<li>Reader-mode HTML (clean text, no chrome)</li>
+<li>Full-page archive (the original page snapshot)</li>
+<li>Screenshot</li>
+<li>Banner image</li>
+<li>The original PDF, if the bookmark was a PDF asset</li>
+<li>Tags, metadata, summaries</li>
+</ul>
+<p>This is more than I need from a read-it-later app. It is also exactly what I need from a <em>source layer for a downstream pipeline</em> — and the first design choice was not writing that source layer myself. Karakeep had already solved it.</p>
+<p>I could have skipped Karakeep and pointed scripts at any bookmarking API — Pocket, Instapaper, Pinboard, Wallabag, whatever. I didn&rsquo;t, and the reason is mundane and load-bearing: I want the bookmarks to outlive the pipeline. If I rebuild the Kindle pipeline next year, the bookmarks should still be there, untouched, in their own system. Coupling the inbox to the conversion machinery would have made both more brittle.</p>
+<h2>The export is the contract</h2>
+<p>Karakeep has an HTTP API. The pipeline does not use it directly.</p>
+<p>Instead, a nightly systemd timer on the server (<code>karakeep-export.timer</code>, fires at 05:00 UTC with up to ten minutes of randomized delay) runs a oneshot service that calls a small Python script (<code>karakeep-export.py</code>). The script paginates the Karakeep API and writes every bookmark to a folder on a Samba share that the rest of my LAN already mounts:</p>
+<pre><code>/srv/samba/shared/karakeep-export/
+  &lt;tag-name&gt;/
+    &lt;safe-title&gt;_&lt;short-id&gt;/
+      metadata.json
+      content.html
+      screenshot.png
+      banner.jpg
+      archive.html
+      original.pdf
+      original.&lt;ext&gt;
+</code></pre>
+<p>The header comment in the script reads: <em>no conversion — raw assets are copied as-is so a downstream AI agent can do its own multimodal processing</em>. That comment is the design.</p>
+<p>Two non-obvious decisions here.</p>
+<p><strong>The Samba share is the seam between halves of the system.</strong> The bookmarking server (Linux, runs Docker, sits in a closet) and the conversion machine (Windows laptop, runs Marker and Ollama) are completely different worlds. They don&rsquo;t share a runtime, a language, a deploy story, or a network namespace. What they do share is a folder. Either side can be replaced without touching the other. If I move the conversion off Windows tomorrow, the new machine just mounts the same share and reads from the same layout. If I migrate from Karakeep to something else, the new exporter writes the same folder structure and nothing downstream notices.</p>
+<p>A folder on a network share is a famously unfashionable interface. It&rsquo;s also one of the most stable interfaces I&rsquo;ve ever shipped against.</p>
+<p><strong>Multi-tag bookmarks are hardlinked, not copied.</strong> A bookmark tagged both <code>essays</code> and <code>to-read</code> appears under both folders, but only one copy lives on disk. I get the natural directory layout without doubling storage. This was a small filesystem trick, and it&rsquo;s the kind of decision that&rsquo;s only available if you&rsquo;ve decided your interface is a filesystem rather than a database in the first place.</p>
+<p>State lives in <code>/var/lib/karakeep-export/state.json</code>; reruns are idempotent and incremental. The script is about 200 lines.</p>
+<h2>Marker as the equalizer</h2>
+<p>The conversion side of the pipeline lives on the laptop. The first step it runs is <a href="https://github.com/datalab-to/marker">Marker</a>, a high-quality PDF-to-markdown OCR system.</p>
+<p>Marker is the heaviest single component in the pipeline by orders of magnitude. It takes a couple of minutes to convert a book. It is also doing the most useful work in the system: every input — a scanned book, a clean PDF, an HTML-rendered web article — comes out the other side as the same shape. Clean markdown, extracted images, structural headings.</p>
+<p>This is the second contract in the pipeline. The first was <em>every bookmark is a folder of assets</em>. The second is <em>every input downstream of Marker is markdown</em>. From here on, none of my code knows or cares whether the source was a 1960s scanned philosophy book or a Substack essay from last week. They are the same shape. The pipeline gets shorter from here.</p>
+<p>Honest about the tradeoff: Marker is slow and not free to run — it pulls in surya-ocr, ML models, GPU expectations. For a corpus my size (a few books a month, a handful of essays a week) it&rsquo;s overkill. I keep it because the alternative is N source-specific normalizers, and that&rsquo;s a worse codebase than one slow normalizer.</p>
+<h2>The deterministic pre-pass before the LLM</h2>
+<p>I covered this at length in the agent-harness essay, so I&rsquo;ll be brief. <code>clean_markdown.py</code> is a regex pass. It finds joined words from OCR (<code>thequickbrown</code>), duplicate headings, malformed LaTeX, empty figure placeholders, and a small catalog of other Marker-produced glitches. It is the cheapest, fastest, most reliable component in the pipeline.</p>
+<p>The LLM proofreader (<code>llm_proofreader.py</code>, <code>qwen3:8b</code> on Ollama, with a verifier subagent reviewing each proposed fix) only sees chunks where the deterministic pass surfaced an issue. Most pages never get sent to the model at all. The pre-pass is what makes the rest of the system tolerable on a laptop — Ollama is fine, but it is not fast, and &ldquo;call the LLM on every page&rdquo; is a runtime budget I don&rsquo;t have.</p>
+<p>The LLM is the most expensive, slowest, and least reliable component in the chain. The pipeline is built to spend as little of it as possible. That&rsquo;s the rule, and it is <em>the</em> rule that distinguishes this system from a more naive one.</p>
+<h2>pdf_builder, targeted at the Scribe</h2>
+<p><code>pdf_builder.py</code> is the smallest interesting file in the pipeline. It uses <a href="https://www.reportlab.com/">reportlab</a> to generate the final PDF: title pages, chapter breaks, typography, blockquote treatment, figure placeholders for images that the OCR pass dropped or that Marker couldn&rsquo;t extract.</p>
+<p>What&rsquo;s specific to the Scribe:</p>
+<ul>
+<li>Margins sized for the annotation gutter, not for centered prose. The outer edge is wider than feels normal because that&rsquo;s where the stylus goes. (The page itself stays Letter-sized — the device handles the scaling, and Letter prints fine on the rare occasion I want a hardcopy.)</li>
+<li>Typography tuned for e-ink: serif body, generous leading, no thin strokes that smear on slow refresh.</li>
+<li>A muted accent color per book, configured in <code>books.json</code>. The Scribe is grayscale, but the same PDF gets used on iPads sometimes, and the accent gives the title pages a small amount of personality without going decorative.</li>
+</ul>
+<p>The PDF is not a beautiful publishing artifact. It is a reading instrument for one specific device. The same code would produce a worse-than-average PDF for an iPad, and a much worse-than-average one for a desktop. That is a feature; the budget for fitness-to-purpose was spent on the device that is in my hand 90% of the time.</p>
+<h2>Obsidian export as the second output</h2>
+<p>The pipeline also writes the same content as Obsidian-flavored markdown. Same source, different rendering: YAML frontmatter, wiki-style links where appropriate, image references mapped into the vault&rsquo;s attachments folder.</p>
+<p>The PDF is what I read. The markdown is what I keep. After I finish a book, the Obsidian copy is searchable in my vault, cross-linkable to anything else I&rsquo;ve written, and survives the Scribe being lost or replaced. One pipeline run produces two outputs from one source of truth.</p>
+<p>This is the smallest piece of polish in the system, and it pays for itself every time I want to grep for a half-remembered passage from something I read six months ago.</p>
+<h2>What isn&rsquo;t in the system</h2>
+<p>The shape of the system is at least as much about what it doesn&rsquo;t include as what it does.</p>
+<ul>
+<li><strong>No cloud LLM.</strong> Local Ollama, by choice. The constraint is mild but real: I don&rsquo;t want to ship my reading list to an inference provider. Local also means there&rsquo;s no cost signal and no quota, which is the part of <a href="/essays/agent-harness-commitment-curve.html">the agent-harness essay</a> where my own reasoning broke down. I still don&rsquo;t have a good answer for that one, but for this pipeline the choice is straightforward.</li>
+<li><strong>No vector database.</strong> No semantic retrieval over the corpus. Karakeep already provides Meilisearch over my bookmarks; Obsidian provides search over my notes. Adding a third retrieval layer would be earned by a use case I don&rsquo;t have yet.</li>
+<li><strong>No proofread artifact retained.</strong> The deterministic and LLM-driven fixes are committed in-place; the pre-fix markdown is gone. I&rsquo;m about 70% sure this is correct; I&rsquo;d revisit the day I want to A/B different proofreading regimes. Right now it would be ceremony.</li>
+</ul>
+<p>Each of these is a candidate component I declined to build. The pipeline is small partly because of what&rsquo;s in it, and partly because of what isn&rsquo;t.</p>
+<h2>The shape that fell out</h2>
+<p>The chain end-to-end:</p>
+<p>Phone → Karakeep → systemd timer → SMB share → Marker OCR → clean_markdown.py → llm_proofreader.py (sometimes) → pdf_builder.py → Kindle Scribe. Marker also branches off to write the Obsidian markdown copy.</p>
+<p>The system gets <em>simpler</em> as it moves toward the reader. Karakeep is a full application with a UI, search, browser archiving, tagging, summarization. The export is one Python file. Marker is a heavy ML system. Everything after Marker is small scripts. The PDF builder is the smallest piece, and it is the one closest to the user.</p>
+<p>The most expensive thing in the chain — the LLM — does the least. It is fenced in by deterministic gating in front and a verifier behind, and it is only called when a regex pass has decided the call is worth making.</p>
+<p>This shape is not what I would have drawn on a whiteboard if you&rsquo;d asked me to design a reading pipeline. It is what fell out of the constraints, taken honestly:</p>
+<ul>
+<li>Reading device is e-ink, annotation-capable → output is PDF with annotation margins.</li>
+<li>Sources are heterogeneous → normalize early and once (Marker).</li>
+<li>Local model only → call it last, narrowly, with deterministic gating in front.</li>
+<li>One user, no SLA → no orchestration, no daemons, no scheduling beyond a nightly timer. Scripts and a folder.</li>
+<li>Artifacts should be portable → folders of files, not a database, not a proprietary format.</li>
+<li>Reading should feel like reading → typography, leading, an accent color on the title page.</li>
+</ul>
+<p>Six sentences. The pipeline is the longhand version of those six sentences.</p>
+<p>The same idea, drawn:</p>
+<pre class="mermaid">flowchart LR
+  subgraph Axioms["Axioms (the constraint set)"]
+    A1[Reading device is a Kindle Scribe<br/>e-ink, annotation-capable]
+    A2[Source corpus is heterogeneous<br/>web / books / scans]
+    A3[Model runs locally<br/>privacy + cost]
+    A4[One user, no SLA]
+    A5[Artifacts must be portable]
+    A6[Reading should feel like reading<br/>taste]
+  end
+
+  subgraph Consequences["Consequences (what fell out)"]
+    C1[Annotation gutter in pdf_builder<br/>outer margin sized for stylus]
+    C2[Marker as equalizer<br/>any source → markdown, once]
+    C3[Deterministic pre-pass before the LLM<br/>llm_proofreader sees only flagged chunks]
+    C4[No orchestration<br/>scripts + folder + nightly timer]
+    C5[Folders, not a database<br/>SMB share as the seam]
+    C6[Obsidian markdown<br/>second output, same source]
+    C7[Typography + accent<br/>serif body, e-ink leading, title-page color]
+  end
+
+  A1 --> C1
+  A2 --> C2
+  A3 --> C3
+  A4 --> C3
+  A4 --> C4
+  A5 --> C5
+  A5 --> C6
+  A6 --> C7
+
+  classDef axiom fill:#f5f5dc,stroke:#8b7355,stroke-width:1.5px;
+  classDef consequence fill:#e8f0e8,stroke:#3d5a3d,stroke-width:1.5px;
+  class A1,A2,A3,A4,A5,A6 axiom;
+  class C1,C2,C3,C4,C5,C6,C7 consequence;
+</pre>
+<p>Most of the arrows are 1:1 — one constraint, one consequence, the cleanest case of derivation. Two are 1:many: portable artifacts forces both <em>folders, not a database</em> and <em>Obsidian as a second output</em>. One is many:1: the deterministic pre-pass exists because of the local-model constraint <em>and</em> the no-SLA constraint together. That&rsquo;s the place I had to think hardest about, and it&rsquo;s also the design choice I&rsquo;m most confident is right — when two axioms agree on a structural move, the move is overdetermined.</p>
+<h2>The lens</h2>
+<p>The agent-harness essay made the abstract version of this claim — that the interesting design in any system is in the axioms, not in the components, and that components are earned by a specific property of the constraint set or they aren&rsquo;t earned at all. This pipeline is the concrete version.</p>
+<p>When I take the constraints seriously and refuse to import any structure that isn&rsquo;t paid for by them, the system that emerges is small. It is also legible. I can read every file in it. I can change any one component without touching the others. The seams between components are mundane — folders, markdown, PDFs — and that&rsquo;s the point. Mundane interfaces are the ones that survive.</p>
+<p>That isn&rsquo;t elegance for its own sake. It&rsquo;s a property of <em>deriving</em> a pipeline rather than <em>designing</em> one. Design says: here is the system I want, let me build it. Derivation says: here is what I have to work with, what&rsquo;s the smallest thing that survives?</p>
+<p>This pipeline is a derivation. The systems I trust most in my life are the ones I built like this; the ones I trust least are the ones I designed top-down and then patched until they more or less worked. That&rsquo;s induction from a small set, not proof of method — but it&rsquo;s the heuristic I keep coming back to.</p>
+<p>The Scribe is in my hand right now. The pipeline ran at 05:00 UTC. There are seven new things to read in <code>to-read/</code>. None of that required me to think about it. That&rsquo;s the property the constraints earned.</p>
+<hr>
+<p><em>Chris Moore. Companion piece to <a href="/essays/agent-harness-commitment-curve.html">Agent harnesses are a commitment curve, not a checklist</a>.</em></p>
+        </article>
+
+        <div class="article-foot">
+            <a href="/#pieces">← back to pieces</a>
+            <span>chrispaulmoore.com · 2026</span>
+        </div>
+    </div>
+
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                background: '#0E0F10',
+                primaryColor: '#0A0B0C',
+                primaryTextColor: '#EDEAE2',
+                primaryBorderColor: 'rgba(237,234,226,0.28)',
+                lineColor: 'rgba(237,234,226,0.45)',
+                secondaryColor: '#121315',
+                tertiaryColor: '#0E0F10',
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: '13px',
+            },
+            flowchart: { curve: 'linear', padding: 12, htmlLabels: false }
+        });
+    </script>
+</body>
+</html>

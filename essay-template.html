@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{{TITLE}} — Chris Paul Moore.">
+    <meta name="author" content="Chris Paul Moore">
+    <link rel="canonical" href="https://chrispaulmoore.com/essays/{{SLUG}}.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="{{TITLE}}">
+    <meta property="og:description" content="{{SUBTITLE}}">
+    <meta property="og:url" content="https://chrispaulmoore.com/essays/{{SLUG}}.html">
+    <meta property="og:site_name" content="Chris Paul Moore">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{TITLE}}">
+    <meta name="twitter:description" content="{{SUBTITLE}}">
+    <title>{{TITLE}} — chrispaulmoore.com</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0E0F10;
+            --panel: #0A0B0C;
+            --panel-soft: #121315;
+            --fg: #EDEAE2;
+            --fg-soft: rgba(237, 234, 226, 0.82);
+            --fg-dim: rgba(237, 234, 226, 0.45);
+            --line: rgba(237, 234, 226, 0.12);
+            --line-strong: rgba(237, 234, 226, 0.28);
+            --grid: rgba(237, 234, 226, 0.06);
+            --accent: #E49A4D;
+
+            --sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+            --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+            --serif: 'IBM Plex Serif', Georgia, serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background: var(--bg);
+            color: var(--fg);
+            font-family: var(--sans);
+            font-weight: 400;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 48px 48px;
+            opacity: 0.6;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .page {
+            position: relative;
+            z-index: 1;
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 32px 64px 64px;
+        }
+
+        a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 80ms; }
+        a:hover { border-bottom-color: var(--accent); }
+        a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+        ::selection { background: var(--accent); color: var(--bg); }
+
+        /* Nav */
+        .nav {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 40px;
+            align-items: center;
+            padding: 14px 20px;
+            border: 1px solid var(--line);
+            background: var(--bg);
+            font-family: var(--mono);
+            font-size: 12px;
+            margin-bottom: 64px;
+        }
+        .nav a { color: inherit; border: none; }
+        .nav-brand { display: flex; gap: 10px; align-items: center; }
+        .nav-brand-name { font-weight: 600; }
+        .nav-brand-domain { color: var(--fg-dim); }
+        .nav-routes { display: flex; gap: 28px; color: var(--fg-dim); justify-content: center; }
+        .nav-routes a:hover { color: var(--fg); }
+        .nav-routes .active { color: var(--fg); }
+        .nav-status { display: flex; gap: 14px; color: var(--fg-dim); }
+        .pulse-dot { color: var(--accent); animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        /* Article */
+        article {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .article-meta {
+            font-family: var(--mono);
+            font-size: 11px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--fg-dim);
+            margin-bottom: 24px;
+            display: flex;
+            gap: 18px;
+            border-bottom: 1px dashed var(--line-strong);
+            padding-bottom: 18px;
+        }
+        .article-meta .num { color: var(--accent); }
+
+        article h1 {
+            font-size: 48px;
+            font-weight: 500;
+            letter-spacing: -0.025em;
+            line-height: 1.05;
+            margin-bottom: 24px;
+        }
+        article .subtitle {
+            font-family: var(--serif);
+            font-style: italic;
+            font-size: 20px;
+            color: var(--fg-soft);
+            margin-bottom: 56px;
+            line-height: 1.5;
+        }
+
+        article h2 {
+            font-size: 26px;
+            font-weight: 500;
+            letter-spacing: -0.015em;
+            line-height: 1.2;
+            margin: 64px 0 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--line);
+        }
+        article h3 {
+            font-size: 19px;
+            font-weight: 600;
+            letter-spacing: -0.005em;
+            margin: 36px 0 12px;
+        }
+        article p {
+            font-size: 16.5px;
+            line-height: 1.7;
+            color: var(--fg-soft);
+            margin-bottom: 20px;
+        }
+        article p strong { color: var(--fg); font-weight: 600; }
+        article p em { color: var(--fg); font-style: italic; }
+
+        article ul, article ol {
+            font-size: 16.5px;
+            line-height: 1.7;
+            color: var(--fg-soft);
+            margin: 0 0 24px 28px;
+        }
+        article li { margin-bottom: 8px; }
+        article li strong { color: var(--fg); font-weight: 600; }
+
+        article blockquote {
+            border-left: 2px solid var(--accent);
+            padding: 4px 0 4px 20px;
+            margin: 24px 0;
+            font-family: var(--serif);
+            font-style: italic;
+            font-size: 18px;
+            color: var(--fg);
+        }
+        article blockquote p { font-family: inherit; font-size: inherit; color: inherit; }
+
+        article hr {
+            border: none;
+            border-top: 1px dashed var(--line-strong);
+            margin: 56px 0;
+        }
+
+        article code {
+            font-family: var(--mono);
+            font-size: 14px;
+            background: var(--panel-soft);
+            padding: 2px 6px;
+            border: 1px solid var(--line);
+            color: var(--fg);
+        }
+
+        article pre {
+            font-family: var(--mono);
+            font-size: 13.5px;
+            line-height: 1.55;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            padding: 18px 20px;
+            overflow-x: auto;
+            margin: 24px 0;
+            color: var(--fg);
+        }
+        article pre code {
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: inherit;
+        }
+
+        /* Mermaid block — overrides pre styling */
+        article pre.mermaid {
+            background: var(--bg);
+            border: 1px solid var(--line);
+            padding: 24px;
+            text-align: center;
+            color: var(--fg);
+            font-size: 12px;
+            display: block;
+        }
+        article pre.mermaid svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+
+        /* Trailing draft footer line */
+        article p:last-of-type em { color: var(--fg-dim); font-style: italic; }
+
+        /* Footer */
+        .article-foot {
+            max-width: 720px;
+            margin: 80px auto 0;
+            padding: 24px 20px;
+            border-top: 1px dashed var(--line-strong);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--mono);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--fg-dim);
+        }
+        .article-foot a { color: var(--accent); border: none; }
+        .article-foot a:hover { color: var(--fg); }
+
+        /* Responsive */
+        @media (max-width: 1199px) {
+            .page { padding: 24px 32px 48px; }
+            .nav { margin-bottom: 48px; }
+            article h1 { font-size: 38px; }
+            article .subtitle { font-size: 18px; margin-bottom: 40px; }
+        }
+        @media (max-width: 899px) {
+            body::before { background-size: 32px 32px; }
+            .page { padding: 16px 20px 32px; }
+            .nav { grid-template-columns: 1fr; gap: 12px; padding: 12px 14px; margin-bottom: 32px; }
+            .nav-routes { justify-content: flex-start; flex-wrap: wrap; gap: 14px; }
+            .nav-status { font-size: 11px; }
+            article h1 { font-size: 30px; }
+            article h2 { font-size: 22px; }
+            article p, article ul, article ol { font-size: 15.5px; }
+            .article-foot { flex-direction: column; gap: 12px; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <header class="nav" role="navigation">
+            <div class="nav-brand">
+                <a href="/" style="display:flex; gap:10px; align-items:center;">
+                    <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true">
+                        <rect x="1" y="7" width="8" height="8" fill="none" stroke="currentColor"/>
+                        <rect x="13" y="7" width="8" height="8" fill="none" stroke="currentColor"/>
+                        <path d="M9 11h4" stroke="currentColor"/>
+                        <circle cx="11" cy="11" r="1.2" fill="var(--accent)"/>
+                    </svg>
+                    <span class="nav-brand-name">cpm</span>
+                    <span class="nav-brand-domain">/ chrispaulmoore.com</span>
+                </a>
+            </div>
+            <nav class="nav-routes">
+                <a href="/">› index</a>
+                <a class="active" href="/#pieces">/pieces</a>
+                <a href="/#systems">/systems</a>
+                <a href="/homelab.html">/homelab</a>
+                <a href="/#lab">/lab</a>
+                <a href="/#connect">/connect</a>
+            </nav>
+            <div class="nav-status">
+                <span>KC · 39.09N</span>
+                <span><span class="pulse-dot">●</span> available</span>
+            </div>
+        </header>
+
+        <article>
+            <div class="article-meta">
+                <span class="num">PIECE / {{NUMBER}}</span>
+                <span>{{WORD_COUNT}} words</span>
+                <span>{{TAG}}</span>
+            </div>
+            <h1>{{TITLE}}</h1>
+            {{SUBTITLE_BLOCK}}
+            {{BODY}}
+        </article>
+
+        <div class="article-foot">
+            <a href="/#pieces">← back to pieces</a>
+            <span>chrispaulmoore.com · 2026</span>
+        </div>
+    </div>
+
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                background: '#0E0F10',
+                primaryColor: '#0A0B0C',
+                primaryTextColor: '#EDEAE2',
+                primaryBorderColor: 'rgba(237,234,226,0.28)',
+                lineColor: 'rgba(237,234,226,0.45)',
+                secondaryColor: '#121315',
+                tertiaryColor: '#0E0F10',
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: '13px',
+            },
+            flowchart: { curve: 'linear', padding: 12, htmlLabels: false }
+        });
+    </script>
+</body>
+</html>

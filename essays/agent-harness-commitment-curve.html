@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Agent harnesses are a commitment curve, not a checklist — Chris Paul Moore.">
+    <meta name="author" content="Chris Paul Moore">
+    <link rel="canonical" href="https://chrispaulmoore.com/essays/agent-harness-commitment-curve.html">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Agent harnesses are a commitment curve, not a checklist">
+    <meta property="og:description" content="Somewhere around last year it became normal to describe an agent by listing its parts. Orchestration loop, tools, memory, context management, prompt…">
+    <meta property="og:url" content="https://chrispaulmoore.com/essays/agent-harness-commitment-curve.html">
+    <meta property="og:site_name" content="Chris Paul Moore">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Agent harnesses are a commitment curve, not a checklist">
+    <meta name="twitter:description" content="Somewhere around last year it became normal to describe an agent by listing its parts. Orchestration loop, tools, memory, context management, prompt…">
+    <title>Agent harnesses are a commitment curve, not a checklist — chrispaulmoore.com</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0E0F10;
+            --panel: #0A0B0C;
+            --panel-soft: #121315;
+            --fg: #EDEAE2;
+            --fg-soft: rgba(237, 234, 226, 0.82);
+            --fg-dim: rgba(237, 234, 226, 0.45);
+            --line: rgba(237, 234, 226, 0.12);
+            --line-strong: rgba(237, 234, 226, 0.28);
+            --grid: rgba(237, 234, 226, 0.06);
+            --accent: #E49A4D;
+
+            --sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+            --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+            --serif: 'IBM Plex Serif', Georgia, serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background: var(--bg);
+            color: var(--fg);
+            font-family: var(--sans);
+            font-weight: 400;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 48px 48px;
+            opacity: 0.6;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .page {
+            position: relative;
+            z-index: 1;
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 32px 64px 64px;
+        }
+
+        a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 80ms; }
+        a:hover { border-bottom-color: var(--accent); }
+        a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+        ::selection { background: var(--accent); color: var(--bg); }
+
+        /* Nav */
+        .nav {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 40px;
+            align-items: center;
+            padding: 14px 20px;
+            border: 1px solid var(--line);
+            background: var(--bg);
+            font-family: var(--mono);
+            font-size: 12px;
+            margin-bottom: 64px;
+        }
+        .nav a { color: inherit; border: none; }
+        .nav-brand { display: flex; gap: 10px; align-items: center; }
+        .nav-brand-name { font-weight: 600; }
+        .nav-brand-domain { color: var(--fg-dim); }
+        .nav-routes { display: flex; gap: 28px; color: var(--fg-dim); justify-content: center; }
+        .nav-routes a:hover { color: var(--fg); }
+        .nav-routes .active { color: var(--fg); }
+        .nav-status { display: flex; gap: 14px; color: var(--fg-dim); }
+        .pulse-dot { color: var(--accent); animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        /* Article */
+        article {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .article-meta {
+            font-family: var(--mono);
+            font-size: 11px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--fg-dim);
+            margin-bottom: 24px;
+            display: flex;
+            gap: 18px;
+            border-bottom: 1px dashed var(--line-strong);
+            padding-bottom: 18px;
+        }
+        .article-meta .num { color: var(--accent); }
+
+        article h1 {
+            font-size: 48px;
+            font-weight: 500;
+            letter-spacing: -0.025em;
+            line-height: 1.05;
+            margin-bottom: 24px;
+        }
+        article .subtitle {
+            font-family: var(--serif);
+            font-style: italic;
+            font-size: 20px;
+            color: var(--fg-soft);
+            margin-bottom: 56px;
+            line-height: 1.5;
+        }
+
+        article h2 {
+            font-size: 26px;
+            font-weight: 500;
+            letter-spacing: -0.015em;
+            line-height: 1.2;
+            margin: 64px 0 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--line);
+        }
+        article h3 {
+            font-size: 19px;
+            font-weight: 600;
+            letter-spacing: -0.005em;
+            margin: 36px 0 12px;
+        }
+        article p {
+            font-size: 16.5px;
+            line-height: 1.7;
+            color: var(--fg-soft);
+            margin-bottom: 20px;
+        }
+        article p strong { color: var(--fg); font-weight: 600; }
+        article p em { color: var(--fg); font-style: italic; }
+
+        article ul, article ol {
+            font-size: 16.5px;
+            line-height: 1.7;
+            color: var(--fg-soft);
+            margin: 0 0 24px 28px;
+        }
+        article li { margin-bottom: 8px; }
+        article li strong { color: var(--fg); font-weight: 600; }
+
+        article blockquote {
+            border-left: 2px solid var(--accent);
+            padding: 4px 0 4px 20px;
+            margin: 24px 0;
+            font-family: var(--serif);
+            font-style: italic;
+            font-size: 18px;
+            color: var(--fg);
+        }
+        article blockquote p { font-family: inherit; font-size: inherit; color: inherit; }
+
+        article hr {
+            border: none;
+            border-top: 1px dashed var(--line-strong);
+            margin: 56px 0;
+        }
+
+        article code {
+            font-family: var(--mono);
+            font-size: 14px;
+            background: var(--panel-soft);
+            padding: 2px 6px;
+            border: 1px solid var(--line);
+            color: var(--fg);
+        }
+
+        article pre {
+            font-family: var(--mono);
+            font-size: 13.5px;
+            line-height: 1.55;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            padding: 18px 20px;
+            overflow-x: auto;
+            margin: 24px 0;
+            color: var(--fg);
+        }
+        article pre code {
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: inherit;
+        }
+
+        /* Mermaid block — overrides pre styling */
+        article pre.mermaid {
+            background: var(--bg);
+            border: 1px solid var(--line);
+            padding: 24px;
+            text-align: center;
+            color: var(--fg);
+            font-size: 12px;
+            display: block;
+        }
+        article pre.mermaid svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+
+        /* Trailing draft footer line */
+        article p:last-of-type em { color: var(--fg-dim); font-style: italic; }
+
+        /* Footer */
+        .article-foot {
+            max-width: 720px;
+            margin: 80px auto 0;
+            padding: 24px 20px;
+            border-top: 1px dashed var(--line-strong);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--mono);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--fg-dim);
+        }
+        .article-foot a { color: var(--accent); border: none; }
+        .article-foot a:hover { color: var(--fg); }
+
+        /* Responsive */
+        @media (max-width: 1199px) {
+            .page { padding: 24px 32px 48px; }
+            .nav { margin-bottom: 48px; }
+            article h1 { font-size: 38px; }
+            article .subtitle { font-size: 18px; margin-bottom: 40px; }
+        }
+        @media (max-width: 899px) {
+            body::before { background-size: 32px 32px; }
+            .page { padding: 16px 20px 32px; }
+            .nav { grid-template-columns: 1fr; gap: 12px; padding: 12px 14px; margin-bottom: 32px; }
+            .nav-routes { justify-content: flex-start; flex-wrap: wrap; gap: 14px; }
+            .nav-status { font-size: 11px; }
+            article h1 { font-size: 30px; }
+            article h2 { font-size: 22px; }
+            article p, article ul, article ol { font-size: 15.5px; }
+            .article-foot { flex-direction: column; gap: 12px; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <header class="nav" role="navigation">
+            <div class="nav-brand">
+                <a href="/" style="display:flex; gap:10px; align-items:center;">
+                    <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true">
+                        <rect x="1" y="7" width="8" height="8" fill="none" stroke="currentColor"/>
+                        <rect x="13" y="7" width="8" height="8" fill="none" stroke="currentColor"/>
+                        <path d="M9 11h4" stroke="currentColor"/>
+                        <circle cx="11" cy="11" r="1.2" fill="var(--accent)"/>
+                    </svg>
+                    <span class="nav-brand-name">cpm</span>
+                    <span class="nav-brand-domain">/ chrispaulmoore.com</span>
+                </a>
+            </div>
+            <nav class="nav-routes">
+                <a href="/">› index</a>
+                <a class="active" href="/#pieces">/pieces</a>
+                <a href="/#systems">/systems</a>
+                <a href="/homelab.html">/homelab</a>
+                <a href="/#lab">/lab</a>
+                <a href="/#connect">/connect</a>
+            </nav>
+            <div class="nav-status">
+                <span>KC · 39.09N</span>
+                <span><span class="pulse-dot">●</span> available</span>
+            </div>
+        </header>
+
+        <article>
+            <div class="article-meta">
+                <span class="num">PIECE / 001</span>
+                <span>2,606 words</span>
+                <span>ESSAY · AGENTS</span>
+            </div>
+            <h1>Agent harnesses are a commitment curve, not a checklist</h1>
+            
+            <p>Somewhere around last year it became normal to describe an agent by listing its parts. Orchestration loop, tools, memory, context management, prompt construction, output parsing, state, error handling, guardrails, verification, subagent orchestration, token tracking. Twelve of them. I&rsquo;ve seen people compile similar lists on whiteboards, in LangChain tutorials, in architecture diagrams inside enterprises, and, most usefully for me, in Alex Ker&rsquo;s post <a href="https://x.com/thealexker/status/2045203785304232162">&ldquo;Harnesses are everything. Here&rsquo;s how to optimize yours.&rdquo;</a> That is the vocabulary I&rsquo;ve been using as a working tool for the past several months.</p>
+<p>This post is not a framework. It is what happened when I took Alex&rsquo;s taxonomy and tried to use it as a working tool against two different agents — one at work, one at home — and noticed where it held, where it bent, and where I still don&rsquo;t quite know what to do with it.</p>
+<h2>The trap</h2>
+<p>The failure mode of any taxonomy is that readers treat it as a checklist. Twelve boxes. Tick them all. If your agent is missing verification loops, fix that. If you don&rsquo;t have subagent orchestration, add that. This reading produces agents that are over-engineered in one direction and strangely brittle in another — because what the taxonomy is is a vocabulary of surfaces on which agent behavior can be shaped. It does not tell you which surfaces to shape for the agent you are building. That part depends on the constraints you&rsquo;re operating under, and those are not in the list.</p>
+<p>My claim, which I&rsquo;ll spend the rest of this post trying to earn: <strong>components one through six are a foundation, components seven through twelve are a commitment curve, and which half of the curve you need is determined by the axioms of your deployment context, not by the taxonomy.</strong></p>
+<h2>The list, briefly</h2>
+<p>In the order Alex presents them:</p>
+<ol>
+<li>Orchestration loop</li>
+<li>Tools</li>
+<li>Memory</li>
+<li>Context management</li>
+<li>Prompt construction</li>
+<li>Output parsing</li>
+<li>State management</li>
+<li>Error handling</li>
+<li>Guardrails</li>
+<li>Verification loops</li>
+<li>Subagent orchestration</li>
+<li>Token / cost tracking</li>
+</ol>
+<p>Rather than restate each one, I&rsquo;ll lean on Alex&rsquo;s post for the definitions and spend my words on what I saw.</p>
+<h2>Two agents, two axiom sets</h2>
+<p>The first agent is <strong>chorus-agent</strong>: a LangGraph ReAct agent running Qwen3-30B via the SS&amp;C AI Gateway. Its job is narrow and high-stakes. Read AWD CSD binary forms, produce Chorus Classic XML, hold a structured <code>FormAnalysis</code> + <code>CrossFormReport</code> contract across multiple forms. The constraint set is not subtle. Multi-agent, regulated financial-services domain, a paid enterprise inference gateway, auditable output, and a hard distinction between Chorus system fields and client LOB fields that has to be preserved or the whole thing is useless. Errors are not tolerable. Hallucinated field names are not tolerable. A cross-form inconsistency that nobody catches is not tolerable. That&rsquo;s the constraint set.</p>
+<p>The second agent is <strong>kindle-pipeline</strong>: a script-driven pipeline that pulls books, essays, and web articles from various sources (Marker-OCR&rsquo;d books, web scrapes from Karakeep-bookmarked essays), produces a Kindle Scribe-targeted PDF with annotation margins plus an Obsidian markdown export, and runs an LLM proofreader over the OCR&rsquo;d text to catch joined words, LaTeX artifacts, and other Marker-produced weirdness before it commits. It runs locally on Ollama against qwen3:8b on a laptop. Single user — me. No SLA. No compliance regime. No audit trail anyone will ever read. The constraint set is the inverse of chorus-agent. The cost of a bad run is that I reread a paragraph. That&rsquo;s the constraint set.</p>
+<p>I have applied the same twelve-component taxonomy to both.</p>
+<h2>Chorus-agent — where the full twelve were earned</h2>
+<p>The foundation (1–6) barely warrants discussion; every working agent has these in some form. The interesting question is the discretionary half.</p>
+<p>For chorus-agent, the answer is the unsurprising one: all six earn their keep, and the reasons are specific. <strong>State management</strong> because gateway dropouts mid-cross-form would lose a day&rsquo;s work, and checkpointing at the per-form boundary maps onto the natural seams in the data. <strong>Error handling</strong> because three distinguishable failure modes (retry-worthy network blip, gateway reject, malformed model output) demand three different responses, and collapsing them into &ldquo;retry harder&rdquo; creates silent drift in regulated outputs. <strong>Guardrails</strong> because client-authored documents could carry instruction-shaped text, and the model must be unable to expand its narrow job — length caps, strict output schemas, a refusal to treat document content as instructions. <strong>Subagent orchestration</strong> because per-form analyses are independent and parallelizable while cross-form synthesis depends on them; the shape of the data demanded it.</p>
+<p>Two of the six are worth a longer beat.</p>
+<p><strong>Verification loops.</strong> The cross-form report is a synthesis across independent per-form analyses. The synthesis is exactly the kind of step where LLMs are prone to confabulating consistency. A separate verification pass — check that each claim in the synthesis is grounded in at least one form-level analysis — catches the kind of failure a single-pass agent cannot catch in itself. This is not paranoia; it is a structural feature of how generation works. Verification is how you turn a text generator into a reporting system.</p>
+<p><strong>Token / cost tracking.</strong> The AI Gateway is paid. Usage is metered. A deployment without tracking is a deployment you cannot improve, because you cannot see what improvements cost. This one is obvious once you&rsquo;re writing checks.</p>
+<p>Full stack, earned. Nothing in seven through twelve is there because the taxonomy said so. Each component is justified by a specific property of the constraint set.</p>
+<h2>Kindle-pipeline — where the taxonomy bent</h2>
+<p>I also implemented all twelve for the kindle-pipeline. It is also documented as a 12/12 harness in the repo. Both of those things are true. Also true: several of the components are honestly overkill for the actual constraints, and the most important design decisions in the pipeline aren&rsquo;t well-described by the taxonomy at all.</p>
+<p><strong>State management, honestly rethought.</strong> The pipeline checkpoints per chunk and supports <code>--resume</code>. I have used that exactly twice, both times because I killed it for an unrelated reason. There is no SLA, no scale problem, no external interruption I need to survive — just me, one pipeline, occasionally ten books in a queue. Writing the checkpointing was a weekend of careful work; the value it has returned is the ability to kill and resume, which I could also have gotten from making chunks smaller and re-running. I don&rsquo;t regret having it, but I cannot, in honesty, defend it as necessary. It&rsquo;s there because the taxonomy implied I needed it, not because the constraint set demanded it.</p>
+<p><strong>Verification loops.</strong> The proofreader is followed by a separate verifier agent that reviews each proposed fix before it&rsquo;s applied. This sounds rigorous, and it is the pattern you&rsquo;d reach for if the stakes were real. In practice, the <em>deterministic pre-pass</em> upstream of the proofreader does most of the useful work, and the persistent <code>proofreader_memory.json</code> of known false positives does most of the rest. The verifier agent, as an independent LLM call, catches real mistakes perhaps once every several chunks. Is that worth its latency and model time? Probably not, against the actual cost of a missed proofread in a personal book I am reading for pleasure on a Kindle. The verification loop is in the pipeline because it&rsquo;s good engineering practice. If I were being ruthless about matching the harness to the constraint set, I&rsquo;d remove it and accept a slightly noisier read-through.</p>
+<p><strong>Subagent orchestration.</strong> The proofreader / verifier pair is a dual-agent pattern, which checks the subagent-orchestration box. I could almost certainly get 90% of the quality from a single, better-prompted agent with an explicit two-step rubric inside its own prompt — no second model call. The dual-agent structure is more ceremonial than load-bearing here.</p>
+<p>Three components over-engineered against the real axioms. And yet, interestingly, the design decisions that <em>matter most</em> in the pipeline are not the ones the twelve-component taxonomy calls out.</p>
+<p><strong>Deterministic pre-pass before the LLM.</strong> <code>clean_markdown.py</code> runs a regex-driven analysis for joined words, duplicate headings, malformed LaTeX, and empty figure placeholders <em>before</em> the LLM is ever called. The LLM only sees chunks with surfaced issues, and its prompt includes the pre-analysis hints. This is the single most important architectural decision in the pipeline, and it is, I think, not a component in the harness at all. It is a stance about when to reach for the model and when not to. It falls awkwardly between orchestration (1), prompt construction (5), and guardrails (9) without being fully described by any of them. Its relationship to the rest of the system is: the LLM is the most expensive, slowest, and least reliable component. Minimize its surface area and narrow its task before invoking it. That is an axiom of my deployment; it is not a component.</p>
+<p><strong>Persistent false-positive memory.</strong> <code>proofreader_memory.json</code> accumulates patterns that have been flagged in the past and confirmed as non-issues. Each new run starts knowing what it has previously learned not to worry about. This is nominally memory (component 3), but the <em>use case</em> — a personal training set of edge cases accumulated over runs across my own corpus — is not anticipated by a taxonomy written for general agent design. It&rsquo;s a specific answer to a specific question: how do you avoid being wrong about the same thing twice in a system with no test suite?</p>
+<p><strong>Section-aware chunking at heading boundaries.</strong> Instead of fixed token windows, the proofreader chunks at heading seams. This is nominally context management (component 4), but &ldquo;chunk at heading boundaries&rdquo; reflects a <em>domain assumption</em>: the documents are structured prose with hierarchical headings, and reasoning within a section is more coherent than reasoning across one. If the documents were email chains, or legal briefs, or forum posts, this decision would be wrong. It&rsquo;s a constraint-driven design choice dressed up as a context-management choice.</p>
+<p>These three — pre-pass gating, persistent false-positive memory, section-aware chunking — are the parts of the kindle-pipeline I would recommend to someone else. None of them are well-described by the twelve components. All of them fall out of the constraints of the deployment.</p>
+<p>This is the pattern I keep running into: the taxonomy gives me a vocabulary for the parts I have to implement, but the interesting design is always in the axioms that the taxonomy takes as given.</p>
+<h2>The commitment curve</h2>
+<p>Here is the reframe I&rsquo;d offer.</p>
+<p>Components 1–6 are a floor. Any agent you&rsquo;d call working has these in some form: it loops (1), it can call things (2), it remembers enough to finish the task (3), it doesn&rsquo;t exceed the model&rsquo;s context (4), it constructs its prompts deliberately (5), it parses outputs back into something usable (6). Without any of these the agent simply does not function.</p>
+<p>Components 7–12 are a commitment curve. Each one is an <em>investment</em> that exchanges complexity for a property of the system — durability, safety, accountability, auditability, economy. The cost of those investments is real. The value of them is context-dependent. Which of them you should make is determined by the axiom set of your deployment.</p>
+<ul>
+<li><strong>State management (7)</strong> earns itself when the cost of a failed mid-run is higher than the cost of the checkpointing.</li>
+<li><strong>Error handling beyond retry-with-backoff (8)</strong> earns itself when you have multiple distinguishable failure modes that demand different responses.</li>
+<li><strong>Guardrails (9)</strong> earn themselves when untrusted content can reach the model&rsquo;s instruction surface.</li>
+<li><strong>Verification loops (10)</strong> earn themselves when single-pass generation produces a kind of failure that single-pass generation cannot detect.</li>
+<li><strong>Subagent orchestration (11)</strong> earns itself when the shape of the work is parallel, or when truly independent roles clarify the design.</li>
+<li><strong>Token/cost tracking (12)</strong> earns itself when you are paying for usage, or when scale will eventually make you pay.</li>
+</ul>
+<p>The question isn&rsquo;t &ldquo;do I have all twelve.&rdquo; The question is which of seven through twelve the constraints of my deployment actually earn. For chorus-agent, the answer was all of them, and the reasons were specific. For kindle-pipeline, if I were being honest about the constraints, the answer is probably somewhere around eight or nine — the checkpointing, the dual-agent verifier, and the full subagent pattern are there more from good-hygiene instincts than from demand.</p>
+<p>Neither of those answers is wrong. What&rsquo;s wrong is reading the list as a checklist and then quietly becoming over-engineered against imagined stakes — or under-engineered against real ones.</p>
+<h2>A harder question I&rsquo;m dodging</h2>
+<p>I&rsquo;ve been writing as though seven through twelve are six independent dials. They aren&rsquo;t, quite. Verification loops imply state. Subagent orchestration implies error handling. Guardrails and verification both depend on output parsing being strict enough to police. The &ldquo;curve&rdquo; may not be one-dimensional — there&rsquo;s probably an ordering, where investing in one component changes which of the others come due. I don&rsquo;t have a defensible model of that ordering yet, and trying to argue one would be a different essay. Naming it as a thread I&rsquo;m leaving unpulled feels more honest than pretending the six are independent.</p>
+<h2>The one rule I can&rsquo;t yet place</h2>
+<p>Twelve, token and cost tracking, is where my commitment-curve reasoning breaks down in a way I want to note rather than resolve.</p>
+<p>My honest position is that you should track tokens and cost on every project you build, because tracking is how you measure improvement, and measurement is how you learn. If you don&rsquo;t know what a behavior costs, you can&rsquo;t choose to change it. That is a hygiene rule, not a constraint-driven rule. It&rsquo;s closer to &ldquo;always have tests&rdquo; or &ldquo;always commit small&rdquo; — defensible in general, hard to defend in any specific case where the stakes make it clearly unnecessary.</p>
+<p>Kindle-pipeline is the clearly-unnecessary case. It&rsquo;s fully local. Ollama runs on hardware I already own. There is no cost signal. There is no scale problem. There is no SLA or budget. And I still track tokens on it, because I can&rsquo;t quite bring myself to turn the habit off.</p>
+<p>So is token tracking a floor component (1–6) disguised as a commitment curve component (7–12)? Is it a genuine hygiene rule that stands outside the constraint-driven logic? Or is it an instinct of mine that is strictly unjustified in the local case and I should just admit that?</p>
+<p>I don&rsquo;t know. That&rsquo;s the interesting place to end, because it&rsquo;s the spot where my own argument doesn&rsquo;t quite close.</p>
+<h2>What this is not</h2>
+<p>This is not a claim that Alex&rsquo;s taxonomy is wrong. It isn&rsquo;t. It&rsquo;s the most useful decomposition of agent internals I&rsquo;ve come across, and most of what I&rsquo;ve described above — the commitment curve framing, the constraint-axiom mapping — is a <em>reading</em> of the taxonomy, not a replacement for it.</p>
+<p>It&rsquo;s also not a claim that I have a better framework. I don&rsquo;t. I have two agents I&rsquo;ve built and a habit of asking, when I add a component, <em>what specifically about my deployment earns this</em>. If I had to name the contribution, it would be: the taxonomy is a vocabulary for the parts, but the interesting work is always in the axioms that determine which parts you need and how they should behave.</p>
+<p>That much I can defend. The rest is noticing.</p>
+<hr>
+<p><em>Chris Moore. Citation: Alex Ker, <a href="https://x.com/thealexker/status/2045203785304232162">&ldquo;Harnesses are everything. Here&rsquo;s how to optimize yours.&rdquo;</a> Companion piece: <a href="/essays/karakeep-kindle-pipeline.html">A reading pipeline I didn&rsquo;t design — I derived</a>.</em></p>
+        </article>
+
+        <div class="article-foot">
+            <a href="/#pieces">← back to pieces</a>
+            <span>chrispaulmoore.com · 2026</span>
+        </div>
+    </div>
+
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'base',
+            themeVariables: {
+                background: '#0E0F10',
+                primaryColor: '#0A0B0C',
+                primaryTextColor: '#EDEAE2',
+                primaryBorderColor: 'rgba(237,234,226,0.28)',
+                lineColor: 'rgba(237,234,226,0.45)',
+                secondaryColor: '#121315',
+                tertiaryColor: '#0E0F10',
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: '13px',
+            },
+            flowchart: { curve: 'linear', padding: 12, htmlLabels: false }
+        });
+    </script>
+</body>
+</html>
