@@ -1,69 +1,101 @@
 # chrispaulmoore-website
 
-Personal site for Chris Moore. Deploys via GitHub Pages (CNAME → `chrispaulmoore.com`). Cloudflare handles DNS plus the `comments.chrispaulmoore.com` subdomain (Cloudflare Worker in `cloudflare-worker.js`, `wrangler.toml`). No build step — plain HTML served from root.
+Personal site for Chris Paul Moore. Static HTML, no build step for the homepage.
+Deploys via **GitHub Pages** from `main`; `CNAME` points the apex at
+`chrispaulmoore.com`. Cloudflare handles DNS and the `comments.chrispaulmoore.com`
+subdomain (Cloudflare Worker in `cloudflare-worker.js` / `wrangler.toml`, deployed
+independently with `npx wrangler`).
 
-## Active project: site refresh
+## What this site is now (2026-08-06)
 
-Refresh the site from its current professional-portfolio framing into a **personal hub** built around a **systems-thinker / constraint-based-discovery** positioning.
+A **calling card**. One page. Name, a short personal lede, a compact block of
+professional facts, and how to reach him.
 
-### Positioning
+It is deliberately **not**:
 
-- **Not a consulting pitch.** No "hire me" CTAs.
-- **Not a generic portfolio template** either (avoid Work / About / Contact).
-- Chris's worldview, articulated during planning: *pick a constraint set (axioms), follow where they lead, the structure that emerges is the work. Solutions are points on a branch, not destinations.* This comes from his math background (proofs, analysis, abstract algebra) and how he already thinks about Blue Prism Chorus, agent harnesses, his homelab, and D&D.
-- The site should **demonstrate** the lens applied to real systems. The homepage frames. The content proves.
-- Four surfaces worth covering over time: enterprise / BPM work, agent harness & AI, homelab / home ops, narrative-and-game design.
-- Division of domains: **chrispaulmoore.com** is identity / writing / systems thinking; **patientvibes.io** is where project-specific work lives.
+- a blog or an essay feed
+- an AI-agent portal
+- a dashboard, topology diagram, or status page
 
-### Design reference
+### The rule that matters
 
-- High-fidelity brief lives at `~/Downloads/chrispaulmoore.com.zip` → `design_handoff_chrispaulmoore_homepage/`. Direction B: BPMN-style SVG diagrams, hairline blueprint grid, IBM Plex typography, amber-once-per-viewport, near-zero motion.
-- The visual vocabulary fits the systems-thinker positioning. Content needs repositioning from the brief's consulting framing:
-  - §01 Practice → the three (or four) axiom systems Chris thinks through, not three consulting pillars.
-  - §02 Selected work → case studies framed around constraint → structure, not dollar impact.
-  - §03 Outcomes strip (`$15M+` / `40%` etc.) → probably drop. Dollar flex is wrong for a hub.
-  - §05 The Lab → grows. Absorbs writing, reading, D&D.
-  - §06 Connect → CTA replaced by a link row (GitHub, LinkedIn, patientvibes.io, email).
+**Nothing on the homepage states a number that has to be maintained.**
 
-### Stack
+The previous version rendered a hand-written `home.lan` topology — "12 services,
+12/12 green, 99.9% uptime" — listing `wg-easy` and `homepage`. Both had been
+decommissioned. The page sat unchanged from 2026-05-10 to 2026-08-06 and spent
+three months describing infrastructure that no longer existed.
 
-Stay on the current stack. Vanilla HTML + inline `<style>` + inline SVG. The Direction B brief is a static design — no framework needed to render it, and the current GitHub Pages deploy has zero operational overhead.
+This is the same failure the homelab repo already documents: *prefer deriving
+state over hardcoding it — two hand-written service lists drifted apart and
+started lying about what was exposed.* A static calling card has no mechanism to
+stay true, so it must only assert things that stay true on their own.
 
-### Order of operations
+If you ever want live counts on this site again, derive them. Do not type them.
 
-1. **Content first, site second.** The homepage is a display case. At least one finished piece of content should exist before the site rebuild starts — otherwise the redesign ships empty.
-2. Review and finalize the current draft (see "Current progress" below).
-3. Draft a second piece if needed.
-4. Rebuild `index.html` using Direction B visual vocabulary with repositioned content.
+## Design
 
-## Current state (2026-04-27)
+Editorial / typographic. A hard break from the previous "Direction B" look
+(dark blueprint grid, IBM Plex, amber accent) — **that brief is retired; do not
+restore it on the homepage.**
 
-- **Direction B rebuild shipped.** `index.html` is the constraint-based-discovery hub: BPMN-style hero diagram (Constraint → Structure), three axiom-system pillars (Enterprise/BPM, Agents/AI, Home Ops), §02 essay cards, §04 homelab topology updated for the current 12-service stack with Karakeep highlighted, §05 Lab cards, link-row footer. §03 Outcomes dropped per the repositioning brief.
-- **Two essays published** at `essays/<slug>.html`:
-  - `essays/agent-harness-commitment-curve.html` — applies Alex Ker's 12-component taxonomy to `chorus-agent` (regulated) and `kindle-pipeline` (local). Reframes 1–6 as floor and 7–12 as a commitment curve earned by the constraint set.
-  - `essays/karakeep-kindle-pipeline.html` — companion piece. Six-axiom derivation of the Karakeep → Kindle Scribe pipeline, with the SMB share as the seam between halves.
-  - Both essays passed a 12-agent editorial review (developmental, line, copy, technical fact-check, first reader, headline ×2). Factual claims verified against source repos on hal-windows and haldev.
-- **Build pipeline.** `build-essays.py` reads `drafts/*.md` and writes Direction B-styled `essays/<slug>.html` using `essay-template.html`. Mermaid blocks render client-side via mermaid.js v10. Run `python3 build-essays.py` after editing any draft.
-- Source-of-truth markdown lives in `drafts/`. `MANIFEST` in the build script controls essay numbering and tag.
-- Cross-essay links: each essay's footer links to the other.
+- Warm paper `#FBF8F3`, ink `#17150F`, cool slate accent `#3F5C72`
+- Full dark-mode variant via `prefers-color-scheme`
+- One typeface: **Newsreader** (Google Fonts), serif throughout
+- Single column, `max-width: 34rem`, generous vertical rhythm
+- Near-zero motion; `prefers-reduced-motion` respected
+- A real print stylesheet — it is a calling card, so it should print like one
+- No scripts, no analytics, no tracking. `index.html` is ~9.7 KB (was ~44 KB)
 
-## Active backlog
+## Layout of the repo
 
-1. **Third piece of content.** Strong candidates per earlier planning: *the homelab as an axiom set* (12-service stack, zero exposed ports, what falls out of those constraints) or *D&D as constraint design* (encounter design as constraint propagation; named in §05 of the homepage).
-2. **Distribution / packaging.** Original titles are best for on-post / personal-blog. Per the headline-editor reviews, alternative titles exist for HN and social — keep canonical on-post and use alternates for distribution.
-3. **AI-agent harness for the editorial team.** Earlier conversation parked: an AI version of the 6-role review team (developmental / line / copy / technical / first-reader / headline) as a reusable harness for future essays.
-4. **OG image.** Currently points at `family-photo.jpg` from the old site. Direction B brief recommends a custom OG image in the same visual vocabulary; not built yet.
+| Path | Status |
+|---|---|
+| `index.html` | **The site.** Editorial calling card. |
+| `essays/*.html` | Published, still reachable, **not linked from the homepage**. Kept so inbound links don't rot. |
+| `drafts/*.md` | Source markdown for the essays. |
+| `build-essays.py` + `essay-template.html` | Essay build pipeline. Still works. Run `python3 build-essays.py` after editing a draft. |
+| `homelab.html` | **Generated. Do not edit by hand.** Run `python3 build-homelab.py` on haldev. |
+| `build-homelab.py` | Generates `homelab.html` from the Docker API. Read its docstring before changing it. |
+| `cloudflare-worker.js`, `wrangler.toml` | Comments system. Deploys separately. |
+| `CNAME` | DNS. Do not rename or delete. |
+| `family-photo.jpg` | No longer on the page; still the `og:image`. |
 
-## Files not to touch without asking
+## homelab.html is generated
 
-- `homelab.html` — separate subpage, out of refresh scope
-- `wiki.html`, `wiki-viewer.html`, `docsify.html` — separate docsify-powered wiki
-- `cloudflare-worker.js`, `wrangler.toml` — comments system, deploys independently
-- `CNAME` — DNS config, do not rename or delete
-- `family-photo.jpg` — current hero image; may or may not survive the refresh, ask first
+`build-homelab.py` reads the Docker API on haldev and writes `homelab.html`.
+Display names and groups come from `~/homelab/portal/meta.yml` — the same file
+the portal uses, so the page and the dashboard cannot drift into disagreeing.
 
-## Related context
+```sh
+python3 build-homelab.py            # write the page
+python3 build-homelab.py --check    # exit 1 if it no longer matches the fleet
+```
 
-- Global conventions in `~/CLAUDE.md`: use `npx wrangler` (not global), never hardcode tokens, user manages gh/op/Cloudflare auth separately.
-- GitHub MCP server available for repo ops (`mcp__github__*` tools).
-- Memory index at `~/.claude/projects/-home-patientvibes/memory/MEMORY.md` has persistent notes on haldev setup, 1Password workflows, and LAN topology.
+**This page is public and unauthenticated**, so the generator publishes an
+allowlist, enforced by the shape of the `PublicService` dataclass: display
+name, group, coarse health. Image tags, port bindings, host interfaces,
+cloudflared hostnames and internal addresses are read from Docker and dropped
+before rendering — publishing them would amount to a vulnerability inventory
+and a LAN map. The full reasoning is in the module docstring. **If you extend
+that dataclass, you are changing what strangers can read, permanently.**
+
+It is not automated yet. `--check` is designed for a cron or a systemd timer
+that regenerates, commits and pushes; that has not been set up, so the page is
+accurate as of its last manual build. Until then it can still go stale — just
+noisily, because `--check` will say so.
+
+## Open decisions (not actioned — ask first)
+
+1. **Automate the rebuild.** See above. Needs a timer plus deploy credentials
+   on haldev, which is the part worth thinking about rather than the script.
+2. **OG image** is still `family-photo.jpg`, which no longer matches the site's
+   look. Either make a typographic OG card or leave it.
+
+## Conventions
+
+- Vanilla HTML with an inline `<style>`. No framework, no bundler, no CSS file.
+- Use `npx wrangler`, never a global install. Never hardcode tokens.
+- The user manages `gh` / `op` / Cloudflare auth separately.
+- Verify factual claims about the homelab against haldev before publishing them.
+  The Docker API is the source of truth, not memory and not this file.
