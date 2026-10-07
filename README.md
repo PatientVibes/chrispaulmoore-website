@@ -2,13 +2,13 @@
 
 Personal site for Chris Paul Moore — Kansas City, Missouri.
 
-One page: who I am, what I work on, and how to reach me. Not a blog, not a
-portfolio, not a pitch.
+One page, drawn as a library catalog card: who I am and where to find the rest
+of my things. Writing lives at [patientvibes.io](https://patientvibes.io).
 
 ## Stack
 
 Plain HTML with an inline stylesheet. No build step, no framework, no
-JavaScript, no analytics. One webfont (Newsreader) and about 10 KB of markup.
+JavaScript, no analytics. Two webfonts (Courier Prime, Libre Caslon Text).
 
 ## Local development
 
@@ -27,12 +27,10 @@ Pushing to `main` publishes via GitHub Pages. `CNAME` maps the apex domain.
 
 ## Also in here
 
-- `homelab.html` — what my home server is currently running. **Generated, not
-  written:** `python3 build-homelab.py` reads the Docker API on the machine
-  itself. Don't edit the HTML; it is overwritten on every build.
-- `essays/` — two published pieces, kept reachable but no longer linked from the
-  homepage. Built from `drafts/*.md` via `python3 build-essays.py`.
+- `essays/` — two published pieces, kept reachable but not linked from the
+  homepage. They are moving to patientvibes.io. Built from `drafts/*.md` via
+  `python3 build-essays.py`.
 - `cloudflare-worker.js` — the `comments.chrispaulmoore.com` Worker, deployed
-  separately with `npx wrangler`.
+  separately with `npx wrangler`. Nothing on the site uses it at the moment.
 
 See `CLAUDE.md` for the current direction and open decisions.

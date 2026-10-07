@@ -3,301 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Chris Paul Moore — math-trained systems thinker in Kansas City. Enterprise process design at SS&amp;C, agent harnesses, and a home server run with more discipline than it deserves.">
+    <meta name="description" content="Chris Paul Moore, Kansas City. Process automation, a home server, reading, tabletop games, the KC Current. Where to find him.">
     <meta name="author" content="Chris Paul Moore">
     <link rel="canonical" href="https://chrispaulmoore.com/">
-    <meta name="theme-color" content="#FBF8F3" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#16150F" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#4A3B2E" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1C1712" media="(prefers-color-scheme: dark)">
 
     <meta property="og:type" content="profile">
     <meta property="og:title" content="Chris Paul Moore">
-    <meta property="og:description" content="I pick a constraint set and follow it wherever it goes. Kansas City.">
+    <meta property="og:description" content="Kansas City. Process automation, a home server, reading, tabletop games, the KC Current.">
     <meta property="og:url" content="https://chrispaulmoore.com/">
     <meta property="og:image" content="https://chrispaulmoore.com/family-photo.jpg">
     <meta property="og:site_name" content="Chris Paul Moore">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Chris Paul Moore">
-    <meta name="twitter:description" content="I pick a constraint set and follow it wherever it goes. Kansas City.">
+    <meta name="twitter:description" content="Kansas City. Process automation, a home server, reading, tabletop games, the KC Current.">
     <meta name="twitter:image" content="https://chrispaulmoore.com/family-photo.jpg">
     <title>Chris Paul Moore</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Libre+Caslon+Text:ital@1&display=swap" rel="stylesheet">
 
     <style>
-        /* ---------------------------------------------------------------
-           chrispaulmoore.com — one page, editorial.
-           Warm paper, cool accent, one serif, near-zero motion.
-           Nothing here states a number that has to be maintained.
-           --------------------------------------------------------------- */
-
+        /* A library catalog card on a desk. One card; the links are its tracings. */
         :root {
-            --paper:  #FBF8F3;
-            --ink:    #17150F;
-            --soft:   #56514A;
-            --dim:    #857E73;
-            --rule:   #E2DBCE;
-            --accent: #3F5C72;
-
-            --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
-
-            --measure: 34rem;
+            --desk: #4A3B2E;
+            --desk-text: #CBBBA6;
+            --card: #F1EADB;
+            --ink: #26221C;
+            --faint: #7D7262;
+            --rule: #B3322A;
+            --type: "Courier Prime", "Courier New", Courier, monospace;
+            --hand: "Libre Caslon Text", Georgia, "Times New Roman", serif;
         }
-
         @media (prefers-color-scheme: dark) {
             :root {
-                --paper:  #16150F;
-                --ink:    #EDE8DE;
-                --soft:   #ADA69A;
-                --dim:    #7E776C;
-                --rule:   #302C24;
-                --accent: #93B6CE;
+                --desk: #1C1712;
+                --desk-text: #8C7F6E;
+                --card: #2B261F;
+                --ink: #EDE5D3;
+                --faint: #A39783;
+                --rule: #E0675C;
+                color-scheme: dark;
             }
         }
 
-        *, *::before, *::after { box-sizing: border-box; }
-        html { -webkit-text-size-adjust: 100%; }
-
+        * { box-sizing: border-box; }
+        html { background: var(--desk); }
         body {
             margin: 0;
-            background: var(--paper);
+            min-height: 100vh;
+            display: grid;
+            align-content: center;
+            justify-items: center;
+            gap: 20px;
+            padding: 48px 16px;
+            background: var(--desk);
+            font: 16px/1.6 var(--type);
             color: var(--ink);
-            font-family: var(--serif);
-            font-size: 19px;
-            font-weight: 400;
-            line-height: 1.62;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            font-variant-numeric: oldstyle-nums;
         }
 
-        ::selection { background: var(--accent); color: var(--paper); }
-
-        .page {
-            max-width: var(--measure);
-            margin: 0 auto;
-            padding: clamp(3.5rem, 11vh, 8rem) 1.5rem clamp(3rem, 8vh, 5rem);
+        .card {
+            position: relative;
+            width: 100%;
+            max-width: 40rem;
+            background: var(--card);
+            padding: 44px clamp(18px, 4vw, 36px) 60px;
+            box-shadow: 0 1px 0 rgba(0,0,0,.08), 0 18px 40px rgba(0,0,0,.30);
+        }
+        /* The red rule across the top, and the rod hole every card has. */
+        .card::before {
+            content: "";
+            position: absolute;
+            left: 0; right: 0; top: 24px;
+            border-top: 2px solid var(--rule);
+        }
+        .card::after {
+            content: "";
+            position: absolute;
+            left: 50%; bottom: 16px;
+            width: 20px; height: 20px;
+            margin-left: -10px;
+            border-radius: 50%;
+            background: var(--desk);
         }
 
-        /* ---- masthead ---- */
-
-        .masthead { margin-bottom: 3rem; }
-
-        h1 {
+        .call {
+            position: absolute;
+            left: clamp(18px, 4vw, 36px);
+            top: 44px;
             margin: 0;
-            font-size: clamp(2.6rem, 8vw, 3.5rem);
-            font-weight: 500;
-            line-height: 1.05;
-            letter-spacing: -0.021em;
+            font-size: 14px;
+            line-height: 1.35;
+            color: var(--faint);
         }
-
-        .where {
-            margin: 0.65rem 0 0;
-            font-size: 1.05rem;
-            font-style: italic;
-            color: var(--dim);
-        }
-
-        /* ---- lede ---- */
-
-        .lede p {
-            margin: 0 0 1.35rem;
-            color: var(--soft);
-        }
-
-        .lede p:first-child {
-            font-size: 1.32rem;
-            line-height: 1.45;
-            color: var(--ink);
+        .entry { margin-left: 6rem; }
+        .heading { margin: 0; font-weight: 700; }
+        .title {
+            margin: 22px 0 2px;
+            font: italic 400 clamp(24px, 4.5vw, 30px)/1.2 var(--hand);
             text-wrap: balance;
         }
+        .entry p { margin: 0 0 1.2em; }
+        .imprint { color: var(--faint); }
+        .subjects { font-size: 14px; color: var(--faint); }
 
-        .lede p:last-child { margin-bottom: 0; }
-
-        .lede em { color: var(--ink); }
-
-        /* ---- rule ---- */
-
-        hr {
-            border: 0;
-            border-top: 1px solid var(--rule);
-            margin: 3rem 0;
-        }
-
-        /* ---- facts ---- */
-
-        .facts {
-            display: grid;
-            grid-template-columns: 7.5rem 1fr;
-            gap: 1.4rem 1.75rem;
-            margin: 0;
-            font-size: 1.02rem;
-        }
-
-        .facts dt {
-            font-size: 0.72rem;
-            font-weight: 600;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--dim);
-            line-height: 1.9;
-            font-variant-numeric: normal;
-        }
-
-        .facts dd {
-            margin: 0;
-            color: var(--soft);
-        }
-
-        .facts dd strong {
-            font-weight: 500;
-            color: var(--ink);
-        }
-
-        /* ---- links ---- */
+        .tracings { list-style: none; margin: 1.8em 0 0; padding: 0; display: grid; gap: .5em; }
+        .tracings li { padding-left: 2.2em; text-indent: -2.2em; }
 
         a {
-            color: inherit;
-            text-decoration: none;
-            border-bottom: 1px solid var(--rule);
-            transition: color 90ms linear, border-color 90ms linear;
+            color: var(--ink);
+            text-decoration-color: var(--rule);
+            text-underline-offset: 3px;
+        }
+        a:hover { text-decoration-thickness: 2px; }
+        a:focus-visible { outline: 2px solid var(--rule); outline-offset: 2px; }
+
+        .stamp {
+            display: inline-block;
+            margin-left: .3em;
+            padding: 1px 6px;
+            border: 1.5px solid currentColor;
+            color: var(--rule);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            text-indent: 0;
+            transform: rotate(-3deg);
         }
 
-        a:hover {
-            color: var(--accent);
-            border-bottom-color: var(--accent);
+        .colophon { margin: 0; font-size: 13px; color: var(--desk-text); text-align: center; }
+
+        @media (max-width: 560px) {
+            .entry { margin-left: 0; }
+            .heading { margin-top: 64px; }
         }
 
-        a:focus-visible {
-            outline: 2px solid var(--accent);
-            outline-offset: 3px;
-            border-radius: 1px;
+        @media (prefers-reduced-motion: no-preference) {
+            a { transition: text-decoration-thickness .15s; }
         }
-
-        /* ---- contact ---- */
-
-        .contact { margin: 0; }
-
-        .contact dd a { color: var(--ink); }
-        .contact dd a:hover { color: var(--accent); }
-
-        /* ---- colophon ---- */
-
-        .colophon {
-            margin-top: 3.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--rule);
-            font-size: 0.85rem;
-            font-style: italic;
-            color: var(--dim);
-        }
-
-        .colophon p { margin: 0; }
-
-        /* ---- small screens ---- */
-
-        @media (max-width: 33rem) {
-            body { font-size: 18px; }
-
-            .facts {
-                grid-template-columns: 1fr;
-                gap: 0.35rem;
-            }
-
-            .facts dt { line-height: 1.6; }
-            .facts dd { margin-bottom: 1.1rem; }
-            .facts dd:last-of-type { margin-bottom: 0; }
-        }
-
-        /* ---- print: this is a calling card, so let it be one ---- */
 
         @media print {
-            :root {
-                --paper: #FFFFFF;
-                --ink: #000000;
-                --soft: #222222;
-                --dim: #555555;
-                --rule: #CCCCCC;
-                --accent: #000000;
-            }
-            body { font-size: 11pt; }
-            .page { padding: 0; max-width: none; }
-            a { border-bottom: 0; }
+            html, body { background: #fff; }
+            body { min-height: 0; padding: 0; color: #000; }
+            .card { box-shadow: none; border: 1px solid #999; background: #fff; }
+            .card::after { background: #fff; border: 1px solid #999; }
             .colophon { display: none; }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            * { transition: none !important; }
+            a { color: #000; text-decoration: none; }
+            a[href^="http"]::after { content: " <" attr(href) ">"; font-size: 12px; }
         }
     </style>
 </head>
 <body>
-    <main class="page">
+    <main class="card">
+        <p class="call">CPM<br>KC<br>2026</p>
+        <div class="entry">
+            <h1 class="heading">Moore, Chris Paul.</h1>
 
-        <header class="masthead">
-            <h1>Chris Paul Moore</h1>
-            <p class="where">Kansas City, Missouri</p>
-        </header>
+            <p class="title">Where to find me</p>
+            <p class="imprint">Kansas City, Mo. : at home, 2026–</p>
 
-        <section class="lede">
-            <p>I pick a constraint set and follow it wherever it goes.</p>
+            <p>Trained in mathematics. Works on enterprise process automation
+            at SS&amp;C. Runs a home server, enjoys reading, and runs
+            tabletop campaigns. Avid KC Current fan; huge fan of 90.9
+            The Bridge.</p>
 
-            <p>Mathematics taught me that habit — you choose your axioms, you accept
-            what they force on you, and the structure that survives is the actual
-            work. I've spent a decade doing the same thing in software: in enterprise
-            process design, in the agent harnesses I build and then have to live with,
-            and in a home server I run with rather more discipline than it strictly
-            deserves.</p>
+            <p class="subjects">1. Mathematics. 2. Process automation.
+            3. Home servers. 4. Reading. 5. Tabletop games.
+            6. Kansas City Current (Soccer team). 7. KTBG (Radio station :
+            Kansas City, Mo.)</p>
 
-            <p>Away from that, I read more translated fantasy than is reasonable,
-            which is how I ended up writing my own tooling to repair malformed
-            e-books at two in the morning. I run tabletop campaigns, which turns out
-            to be the same skill as stakeholder alignment. I'm not selling anything
-            here — this is just where to find me.</p>
-        </section>
-
-        <hr>
-
-        <dl class="facts">
-            <dt>Work</dt>
-            <dd><strong>Implementation Consultant Advisor at SS&amp;C</strong>, inside
-                Blue Prism Chorus. Eleven years of BPMN modelling, RPA handoffs, and
-                AI Gateway integration — mostly for regulated finance, where being
-                auditable matters more than being clever.</dd>
-
-            <dt>Trained</dt>
-            <dd>Mathematics. Proofs, analysis, abstract algebra.</dd>
-
-            <dt>Building</dt>
-            <dd>Agent harnesses, on enterprise gateways and on local models. A
-                containerised home server with no ports open to the internet.</dd>
-
-            <dt>Elsewhere</dt>
-            <dd>Project work lives at
-                <a href="https://patientvibes.io">patientvibes.io</a>. What the
-                home server is currently running is
-                <a href="/homelab.html">listed here</a>, generated by asking it
-                rather than by remembering.</dd>
-        </dl>
-
-        <hr>
-
-        <dl class="facts contact">
-            <dt>Email</dt>
-            <dd><a href="mailto:chris@chrispaulmoore.com">chris@chrispaulmoore.com</a></dd>
-
-            <dt>GitHub</dt>
-            <dd><a href="https://github.com/PatientVibes" rel="me">github.com/PatientVibes</a></dd>
-
-            <dt>LinkedIn</dt>
-            <dd><a href="https://www.linkedin.com/in/chrispaulmoore" rel="me">linkedin.com/in/chrispaulmoore</a></dd>
-        </dl>
-
-        <footer class="colophon">
-            <p>One page, set in Newsreader. No tracking, no analytics, no scripts.</p>
-        </footer>
-
+            <ol class="tracings">
+                <li>I. Projects and writing — <a href="https://patientvibes.io">patientvibes.io</a> ;
+                    <a href="https://github.com/PatientVibes" rel="me">GitHub</a></li>
+                <li>II. Correspondence — <a href="mailto:chris@chrispaulmoore.com">chris@chrispaulmoore.com</a> ;
+                    <a href="https://www.linkedin.com/in/chrispaulmoore" rel="me">LinkedIn</a></li>
+                <li>III. Kansas City — <a href="https://www.kansascitycurrent.com">KC Current</a> ;
+                    <a href="https://bridge909.org">90.9 The Bridge</a></li>
+                <li>IV. Restricted — <a href="https://dash.chrispaulmoore.com">my apps</a><span class="stamp">Sign-in</span></li>
+            </ol>
+        </div>
     </main>
+    <p class="colophon">No tracking, no scripts.</p>
 </body>
 </html>
