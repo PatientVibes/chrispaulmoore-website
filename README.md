@@ -30,7 +30,5 @@ Pushing to `main` publishes via GitHub Pages. `CNAME` maps the apex domain.
 - `essays/` — two published pieces, kept reachable but not linked from the
   homepage. They are moving to patientvibes.io. Built from `drafts/*.md` via
   `python3 build-essays.py`.
-- `cloudflare-worker.js` — the `comments.chrispaulmoore.com` Worker, deployed
-  separately with `npx wrangler`. Nothing on the site uses it at the moment.
 
 See `CLAUDE.md` for the current direction and open decisions.

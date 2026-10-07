@@ -2,9 +2,12 @@
 
 Personal site for Chris Paul Moore. Static HTML, no build step for the homepage.
 Deploys via **GitHub Pages** from `main`; `CNAME` points the apex at
-`chrispaulmoore.com`. Cloudflare handles DNS and the `comments.chrispaulmoore.com`
-subdomain (Cloudflare Worker in `cloudflare-worker.js` / `wrangler.toml`, deployed
-independently with `npx wrangler`, currently unused).
+`chrispaulmoore.com`. Cloudflare handles DNS.
+
+The `comments.chrispaulmoore.com` Worker was **retired on 2026-10-07**: nothing
+used it, it held one test comment, and its public `GET /comments` returned
+commenters' IP addresses. The Worker, its route, its DNS record and both KV
+namespaces were deleted in Cloudflare, and the source is in git history.
 
 ## What this site is now (2026-10-07)
 
@@ -57,20 +60,18 @@ went up. They are not a counter, so leave them alone.
 | `index.html` | **The site.** |
 | `essays/*.html` | Still served so inbound links keep working, but not linked from the homepage. **Migrating to patientvibes.io.** Once they are live there, replace these with redirects (GitHub Pages: a meta-refresh page per essay) rather than deleting them. |
 | `drafts/*.md`, `build-essays.py`, `essay-template.html` | Essay pipeline. Goes with the essays when they move. |
-| `cloudflare-worker.js`, `wrangler.toml`, `CLOUDFLARE_WORKER_SETUP.md` | Comments Worker at `comments.chrispaulmoore.com`. **Still deployed and healthy, but nothing on the site calls it.** Decide whether to retire it (delete the Worker and KV in Cloudflare first, then these files). |
 | `CNAME` | DNS. Do not rename or delete. |
 | `family-photo.jpg` | Not on the page; still the `og:image`. |
 
 ## Open decisions (not actioned — ask first)
 
 1. **Essay migration.** Redirects once patientvibes.io has them (see above).
-2. **Comments Worker.** Retire or keep (see above).
-3. **OG image** is still `family-photo.jpg`. A typographic card in the
+2. **OG image** is still `family-photo.jpg`. A typographic card in the
    catalog-card style would match the page.
 
 ## Conventions
 
 - Vanilla HTML with an inline `<style>`. No framework, no bundler, no CSS file.
-- Use `npx wrangler`, never a global install. Never hardcode tokens.
+- Never hardcode tokens.
 - The user manages `gh` / `op` / Cloudflare auth separately.
 - Don't state facts about the homelab here at all. Link to the dashboard.
