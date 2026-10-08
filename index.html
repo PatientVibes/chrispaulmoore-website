@@ -135,6 +135,22 @@
         }
 
         .colophon { margin: 0; font-size: 13px; color: var(--desk-text); text-align: center; }
+        .colophon a { color: var(--desk-text); text-decoration-color: currentColor; }
+
+        /* MARC view: the same record as a MARC 21 bibliographic record.
+           Pure CSS -- #marc is the card itself, so :target swaps the views. */
+        .card { scroll-margin-top: 48px; }
+        .marc, .marc-off { display: none; }
+        .card:target .call, .card:target .entry { display: none; }
+        .card:target .marc { display: block; }
+        .card:target ~ .colophon .marc-on { display: none; }
+        .card:target ~ .colophon .marc-off { display: inline; }
+        .marc-label { margin: 0 0 1em; font-weight: 700; }
+        .marc .fields { margin: 0; display: grid; grid-template-columns: 3ch 3ch minmax(0, 1fr); column-gap: 1.2ch; row-gap: .25em; font-size: 14px; line-height: 1.5; }
+        .marc .tag { color: var(--faint); grid-column: 1; }
+        .marc .ind { grid-column: 2; color: var(--faint); white-space: pre; }
+        .marc .val { grid-column: 3; min-width: 0; overflow-wrap: anywhere; }
+        .marc b { color: var(--rule); font-weight: 700; }
 
         @media (max-width: 560px) {
             .entry { margin-left: 0; }
@@ -157,7 +173,7 @@
     </style>
 </head>
 <body>
-    <main class="card">
+    <main class="card" id="marc">
         <p class="call">CPM<br>KC<br>2026</p>
         <div class="entry">
             <h1 class="heading">Moore, Chris Paul.</h1>
@@ -171,7 +187,7 @@
             The Bridge.</p>
 
             <p class="subjects">1. Mathematics. 2. Process automation.
-            3. Home servers. 4. Reading. 5. Tabletop games.
+            3. Home servers. 4. Books and reading. 5. Tabletop games.
             6. Kansas City Current (Soccer team). 7. KTBG (Radio station :
             Kansas City, Mo.)</p>
 
@@ -185,7 +201,34 @@
                 <li>IV. Restricted — <a href="https://dash.chrispaulmoore.com">my apps</a><span class="stamp">Sign-in</span></li>
             </ol>
         </div>
+        <div class="marc">
+            <p class="marc-label">MARC 21 bibliographic record</p>
+            <div class="fields">
+                <span class="tag">LDR</span><span class="ind">  </span><span class="val">00000cai a2200000 i 4500</span>
+                <span class="tag">001</span><span class="ind">  </span><span class="val">cpm2026</span>
+                <span class="tag">040</span><span class="ind">  </span><span class="val"><b>$a</b> CPM <b>$b</b> eng <b>$e</b> rda <b>$c</b> CPM</span>
+                <span class="tag">100</span><span class="ind">1 </span><span class="val"><b>$a</b> Moore, Chris Paul, <b>$e</b> author.</span>
+                <span class="tag">245</span><span class="ind">10</span><span class="val"><b>$a</b> Where to find me / <b>$c</b> Chris Paul Moore.</span>
+                <span class="tag">264</span><span class="ind"> 1</span><span class="val"><b>$a</b> Kansas City, Mo. : <b>$b</b> at home, <b>$c</b> 2026-</span>
+                <span class="tag">336</span><span class="ind">  </span><span class="val"><b>$a</b> text <b>$b</b> txt <b>$2</b> rdacontent</span>
+                <span class="tag">520</span><span class="ind">  </span><span class="val"><b>$a</b> Trained in mathematics. Works on enterprise process automation at SS&amp;C. Runs a home server, enjoys reading, and runs tabletop campaigns. Avid KC Current fan; huge fan of 90.9 The Bridge.</span>
+                <span class="tag">650</span><span class="ind"> 0</span><span class="val"><b>$a</b> Mathematics.</span>
+                <span class="tag">650</span><span class="ind"> 0</span><span class="val"><b>$a</b> Process automation.</span>
+                <span class="tag">650</span><span class="ind"> 0</span><span class="val"><b>$a</b> Home servers.</span>
+                <span class="tag">650</span><span class="ind"> 0</span><span class="val"><b>$a</b> Books and reading.</span>
+                <span class="tag">650</span><span class="ind"> 0</span><span class="val"><b>$a</b> Tabletop games.</span>
+                <span class="tag">610</span><span class="ind">20</span><span class="val"><b>$a</b> Kansas City Current (Soccer team)</span>
+                <span class="tag">610</span><span class="ind">20</span><span class="val"><b>$a</b> KTBG (Radio station : Kansas City, Mo.)</span>
+                <span class="tag">856</span><span class="ind">40</span><span class="val"><b>$u</b> <a href="https://patientvibes.io">https://patientvibes.io</a> <b>$z</b> Projects and writing</span>
+                <span class="tag">856</span><span class="ind">40</span><span class="val"><b>$u</b> <a href="https://github.com/PatientVibes">https://github.com/PatientVibes</a></span>
+                <span class="tag">856</span><span class="ind">40</span><span class="val"><b>$u</b> <a href="mailto:chris@chrispaulmoore.com">mailto:chris@chrispaulmoore.com</a></span>
+                <span class="tag">856</span><span class="ind">40</span><span class="val"><b>$u</b> <a href="https://www.linkedin.com/in/chrispaulmoore">https://www.linkedin.com/in/chrispaulmoore</a></span>
+                <span class="tag">856</span><span class="ind">40</span><span class="val"><b>$u</b> <a href="https://www.kansascitycurrent.com">https://www.kansascitycurrent.com</a></span>
+                <span class="tag">856</span><span class="ind">40</span><span class="val"><b>$u</b> <a href="https://bridge909.org">https://bridge909.org</a></span>
+                <span class="tag">856</span><span class="ind">40</span><span class="val"><b>$u</b> <a href="https://dash.chrispaulmoore.com">https://dash.chrispaulmoore.com</a> <b>$z</b> Restricted: sign-in required</span>
+            </div>
+        </div>
     </main>
-    <p class="colophon">No tracking, no scripts.</p>
+    <p class="colophon">No tracking, no scripts. <a class="marc-on" href="#marc">View as MARC record</a><a class="marc-off" href="#">View as card</a></p>
 </body>
 </html>

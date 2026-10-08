@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <meta name="theme-color" content="#4A3B2E" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1C1712" media="(prefers-color-scheme: dark)">
+    <title>Card not found · Chris Paul Moore</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Libre+Caslon+Text:ital@1&display=swap" rel="stylesheet">
+
+    <style>
+        /* A library catalog card on a desk. One card; the links are its tracings. */
+        :root {
+            --desk: #4A3B2E;
+            --desk-text: #CBBBA6;
+            --card: #F1EADB;
+            --ink: #26221C;
+            --faint: #7D7262;
+            --rule: #B3322A;
+            --type: "Courier Prime", "Courier New", Courier, monospace;
+            --hand: "Libre Caslon Text", Georgia, "Times New Roman", serif;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --desk: #1C1712;
+                --desk-text: #8C7F6E;
+                --card: #2B261F;
+                --ink: #EDE5D3;
+                --faint: #A39783;
+                --rule: #E0675C;
+                color-scheme: dark;
+            }
+        }
+
+        * { box-sizing: border-box; }
+        html { background: var(--desk); }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            align-content: center;
+            justify-items: center;
+            gap: 20px;
+            padding: 48px 16px;
+            background: var(--desk);
+            font: 16px/1.6 var(--type);
+            color: var(--ink);
+        }
+
+        .card {
+            position: relative;
+            width: 100%;
+            max-width: 40rem;
+            background: var(--card);
+            padding: 44px clamp(18px, 4vw, 36px) 60px;
+            box-shadow: 0 1px 0 rgba(0,0,0,.08), 0 18px 40px rgba(0,0,0,.30);
+        }
+        /* The red rule across the top, and the rod hole every card has. */
+        .card::before {
+            content: "";
+            position: absolute;
+            left: 0; right: 0; top: 24px;
+            border-top: 2px solid var(--rule);
+        }
+        .card::after {
+            content: "";
+            position: absolute;
+            left: 50%; bottom: 16px;
+            width: 20px; height: 20px;
+            margin-left: -10px;
+            border-radius: 50%;
+            background: var(--desk);
+        }
+
+        .call {
+            position: absolute;
+            left: clamp(18px, 4vw, 36px);
+            top: 44px;
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.35;
+            color: var(--faint);
+        }
+        .entry { margin-left: 6rem; }
+        .heading { margin: 0; font-weight: 700; }
+        .title {
+            margin: 22px 0 2px;
+            font: italic 400 clamp(24px, 4.5vw, 30px)/1.2 var(--hand);
+            text-wrap: balance;
+        }
+        .entry p { margin: 0 0 1.2em; }
+        .imprint { color: var(--faint); }
+        .subjects { font-size: 14px; color: var(--faint); }
+
+        .tracings { list-style: none; margin: 1.8em 0 0; padding: 0; display: grid; gap: .5em; }
+        .tracings li { padding-left: 2.2em; text-indent: -2.2em; }
+
+        a {
+            color: var(--ink);
+            text-decoration-color: var(--rule);
+            text-underline-offset: 3px;
+        }
+        a:hover { text-decoration-thickness: 2px; }
+        a:focus-visible { outline: 2px solid var(--rule); outline-offset: 2px; }
+
+        .stamp {
+            display: inline-block;
+            margin-left: .3em;
+            padding: 1px 6px;
+            border: 1.5px solid currentColor;
+            color: var(--rule);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            text-indent: 0;
+            transform: rotate(-3deg);
+        }
+
+        .colophon { margin: 0; font-size: 13px; color: var(--desk-text); text-align: center; }
+        .colophon a { color: var(--desk-text); text-decoration-color: currentColor; }
+
+
+        @media (max-width: 560px) {
+            .entry { margin-left: 0; }
+            .heading { margin-top: 64px; }
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            a { transition: text-decoration-thickness .15s; }
+        }
+
+        @media print {
+            html, body { background: #fff; }
+            body { min-height: 0; padding: 0; color: #000; }
+            .card { box-shadow: none; border: 1px solid #999; background: #fff; }
+            .card::after { background: #fff; border: 1px solid #999; }
+            .colophon { display: none; }
+            a { color: #000; text-decoration: none; }
+            a[href^="http"]::after { content: " <" attr(href) ">"; font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <main class="card">
+        <p class="call">404</p>
+        <div class="entry">
+            <h1 class="heading">Card not found.</h1>
+
+            <p class="title">This item is missing from the catalog</p>
+            <p class="imprint">Kansas City, Mo. : at home <span class="stamp">Missing</span></p>
+
+            <p>There's no page at this address. It may have moved, or the
+            link may have a typo.</p>
+
+            <ol class="tracings">
+                <li>I. Return to the catalog — <a href="/">chrispaulmoore.com</a></li>
+            </ol>
+        </div>
+    </main>
+    <p class="colophon">No tracking, no scripts.</p>
+</body>
+</html>

@@ -51,13 +51,17 @@ went up. They are not a counter, so leave them alone.
   outgrow about six tracings, add a "see also" line, not a second design.
 - The "Sign-in" stamp marks links that need an Authentik login.
 - Print stylesheet prints the card with URLs written out.
+- Subject headings use real Library of Congress forms where one exists
+  ("Books and reading", "Kansas City Current (Soccer team)", "KTBG (Radio
+  station : Kansas City, Mo.)").
 - No scripts, no analytics, no tracking.
 
 ## Layout of the repo
 
 | Path | Status |
 |---|---|
-| `index.html` | **The site.** |
+| `index.html` | **The site.** Includes a CSS-only "View as MARC record" view: the card is `id="marc"`, so `#marc` (`:target`) swaps it for the same record as MARC 21 fields. **Keep the two views in sync**: any change to the card's text, subjects or links needs the matching MARC field (520, 650/610, 856). |
+| `404.html` | GitHub Pages' not-found page: a "Card not found" catalog card. Its styles are a copy of `index.html`'s minus the MARC block, so update both when the card design changes. |
 | `essays/*.html` | Still served so inbound links keep working, but not linked from the homepage. **Migrating to patientvibes.io.** Once they are live there, replace these with redirects (GitHub Pages: a meta-refresh page per essay) rather than deleting them. |
 | `drafts/*.md`, `build-essays.py`, `essay-template.html` | Essay pipeline. Goes with the essays when they move. |
 | `CNAME` | DNS. Do not rename or delete. |
